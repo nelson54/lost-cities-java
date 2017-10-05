@@ -1,0 +1,28 @@
+entity Match {
+	initialSeed Long
+}
+
+entity CommandEntity {
+	user User
+    color String
+    play String
+    discard String
+}
+
+relationship OneToMany {
+	Match{match} to User,
+	Match{match} to CommandEntity
+}
+
+relationship OneToOne {
+	CommandEntity to User
+}
+
+
+
+// Set pagination options
+paginate Match with pagination
+
+// Set service options to all except few
+service all with serviceImpl except CommandEntity
+
