@@ -1,0 +1,54 @@
+<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+
+    <div class="modal-header">
+        <h4 class="modal-title" id="myCommandEntityLabel" jhiTranslate="jhipsterApp.commandEntity.home.createOrEditLabel">Create or edit a Command Entity</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                (click)="clear()">&times;</button>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" [hidden]="!commandEntity.id">
+            <label for="id" jhiTranslate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                   [(ngModel)]="commandEntity.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="jhipsterApp.commandEntity.color" for="field_color">Color</label>
+            <input type="text" class="form-control" name="color" id="field_color"
+                [(ngModel)]="commandEntity.color"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="jhipsterApp.commandEntity.play" for="field_play">Play</label>
+            <input type="text" class="form-control" name="play" id="field_play"
+                [(ngModel)]="commandEntity.play"  />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="jhipsterApp.commandEntity.discard" for="field_discard">Discard</label>
+            <input type="text" class="form-control" name="discard" id="field_discard"
+                [(ngModel)]="commandEntity.discard"  />
+        </div>
+
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="jhipsterApp.commandEntity.user" for="field_user">User</label>
+            <select class="form-control" id="field_user" name="user" [(ngModel)]="commandEntity.user">
+                <option [ngValue]="null"></option>
+                <option [ngValue]="gameUserOption.id === commandEntity.user?.id ? commandEntity.user : gameUserOption" *ngFor="let gameUserOption of users; trackBy: trackGameUserById">{{gameUserOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="jhipsterApp.commandEntity.match" for="field_match">Match</label>
+            <select class="form-control" id="field_match" name="match" [(ngModel)]="commandEntity.match" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="matchOption.id === commandEntity.match?.id ? commandEntity.match : matchOption" *ngFor="let matchOption of matches; trackBy: trackMatchById">{{matchOption.id}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">
+            <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+            <span class="fa fa-save"></span>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

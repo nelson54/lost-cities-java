@@ -1,0 +1,28 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "gameUsers",
+            "otherEntityName": "gameUser",
+            "otherEntityRelationshipName": "match"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "commands",
+            "otherEntityName": "commandEntity",
+            "otherEntityRelationshipName": "match"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "initialSeed",
+            "fieldType": "Long"
+        }
+    ],
+    "changelogDate": "20171005174653",
+    "entityTableName": "match",
+    "dto": "no",
+    "pagination": "pagination",
+    "service": "serviceClass"
+}

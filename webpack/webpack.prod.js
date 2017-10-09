@@ -20,7 +20,8 @@ module.exports = webpackMerge(commonConfig({ env: ENV }), {
     entry: {
         polyfills: './src/main/webapp/app/polyfills',
         global: './src/main/webapp/content/scss/global.scss',
-        main: './src/main/webapp/app/app.main-aot'
+        main: './src/main/webapp/app/app.main-aot',
+        phaser: './src/main/webapp/game/index'
     },
     output: {
         path: utils.root('build/www'),

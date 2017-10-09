@@ -1,0 +1,45 @@
+
+<div *ngIf="commandEntity">
+    <h2><span jhiTranslate="jhipsterApp.commandEntity.detail.title">Command Entity</span> {{commandEntity.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="jhipsterApp.commandEntity.color">Color</span></dt>
+        <dd>
+            <span>{{commandEntity.color}}</span>
+        </dd>
+        <dt><span jhiTranslate="jhipsterApp.commandEntity.play">Play</span></dt>
+        <dd>
+            <span>{{commandEntity.play}}</span>
+        </dd>
+        <dt><span jhiTranslate="jhipsterApp.commandEntity.discard">Discard</span></dt>
+        <dd>
+            <span>{{commandEntity.discard}}</span>
+        </dd>
+        <dt><span jhiTranslate="jhipsterApp.commandEntity.user">User</span></dt>
+        <dd>
+            <div *ngIf="commandEntity.user">
+                <a [routerLink]="['/game-user', commandEntity.user?.id]">{{commandEntity.user?.id}}</a>
+            </div>
+        </dd>
+        <dt><span jhiTranslate="jhipsterApp.commandEntity.match">Match</span></dt>
+        <dd>
+            <div *ngIf="commandEntity.match">
+                <a [routerLink]="['/match', commandEntity.match?.id]">{{commandEntity.match?.id}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'command-entity/'+ commandEntity.id + '/edit'} }]"
+            replaceUrl="true"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

@@ -1,0 +1,72 @@
+<div>
+    <h2>
+        <span jhiTranslate="jhipsterApp.commandEntity.home.title">Command Entities</span>
+        <button class="btn btn-primary float-right jh-create-entity create-command-entity" [routerLink]="['/', { outlets: { popup: ['command-entity-new'] } }]">
+            <span class="fa fa-plus"></span>
+            <span  jhiTranslate="jhipsterApp.commandEntity.home.createLabel">
+            Create new Command Entity
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="commandEntities">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span jhiTranslate="global.field.id">ID</span></th>
+            <th><span jhiTranslate="jhipsterApp.commandEntity.color">Color</span></th>
+            <th><span jhiTranslate="jhipsterApp.commandEntity.play">Play</span></th>
+            <th><span jhiTranslate="jhipsterApp.commandEntity.discard">Discard</span></th>
+            <th><span jhiTranslate="jhipsterApp.commandEntity.user">User</span></th>
+            <th><span jhiTranslate="jhipsterApp.commandEntity.match">Match</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let commandEntity of commandEntities ;trackBy: trackId">
+                <td><a [routerLink]="['../command-entity', commandEntity.id ]">{{commandEntity.id}}</a></td>
+                <td>{{commandEntity.color}}</td>
+                <td>{{commandEntity.play}}</td>
+                <td>{{commandEntity.discard}}</td>
+                <td>
+                    <div *ngIf="commandEntity.user">
+                        <a [routerLink]="['../game-user', commandEntity.user?.id ]" >{{commandEntity.user?.id}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="commandEntity.match">
+                        <a [routerLink]="['../match', commandEntity.match?.id ]" >{{commandEntity.match?.id}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['../command-entity', commandEntity.id ]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'command-entity/'+ commandEntity.id + '/edit'} }]"
+                                replaceUrl="true"
+                                class="btn btn-primary btn-sm">
+                            <span class="fa fa-pencil"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'command-entity/'+ commandEntity.id + '/delete'} }]"
+                                replaceUrl="true"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

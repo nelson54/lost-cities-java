@@ -1,5 +1,5 @@
 {
-  "name": "jhipster",
+  "name": "lost-cities-java",
   "version": "0.0.0",
   "description": "Description for jhipster",
   "private": true,
@@ -25,6 +25,7 @@
     "ng2-webstorage": "1.8.0",
     "ngx-cookie": "1.0.0",
     "ngx-infinite-scroll": "0.5.1",
+    "phaser": "^2.6.2",
     "reflect-metadata": "0.1.10",
     "rxjs": "5.4.2",
     "swagger-ui": "2.2.10",

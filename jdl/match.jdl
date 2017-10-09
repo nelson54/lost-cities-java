@@ -2,20 +2,23 @@ entity Match {
 	initialSeed Long
 }
 
+entity GameUser {
+}
+
 entity CommandEntity {
-	user User
     color String
     play String
     discard String
 }
 
 relationship OneToMany {
-	Match{match} to User,
-	Match{match} to CommandEntity
+	Match{gameUsers} to GameUser{match},
+	Match{commands} to CommandEntity{match}
 }
 
 relationship OneToOne {
-	CommandEntity to User
+    GameUser{user} to User{gameUser}
+	CommandEntity{user} to GameUser{commandEntity}
 }
 
 
@@ -24,5 +27,5 @@ relationship OneToOne {
 paginate Match with pagination
 
 // Set service options to all except few
-service all with serviceImpl except CommandEntity
+service Match with serviceClass
 

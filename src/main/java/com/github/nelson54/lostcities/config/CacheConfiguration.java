@@ -45,6 +45,13 @@ public class CacheConfiguration {
             cm.createCache(com.github.nelson54.lostcities.domain.Authority.class.getName(), jcacheConfiguration);
             cm.createCache(com.github.nelson54.lostcities.domain.User.class.getName() + ".authorities", jcacheConfiguration);
             cm.createCache(com.github.nelson54.lostcities.domain.SocialUserConnection.class.getName(), jcacheConfiguration);
+            cm.createCache(com.github.nelson54.lostcities.domain.Match.class.getName(), jcacheConfiguration);
+            cm.createCache(com.github.nelson54.lostcities.domain.Match.class.getName() + ".users", jcacheConfiguration);
+            cm.createCache(com.github.nelson54.lostcities.domain.Match.class.getName() + ".commands", jcacheConfiguration);
+            cm.createCache(com.github.nelson54.lostcities.domain.CommandEntity.class.getName(), jcacheConfiguration);
+            cm.createCache(com.github.nelson54.lostcities.domain.CommandEntity.class.getName() + ".matches", jcacheConfiguration);
+            cm.createCache(com.github.nelson54.lostcities.domain.GameUser.class.getName(), jcacheConfiguration);
+            cm.createCache(com.github.nelson54.lostcities.domain.Match.class.getName() + ".gameUsers", jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }

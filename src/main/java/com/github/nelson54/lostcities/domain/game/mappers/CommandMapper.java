@@ -1,14 +1,17 @@
 package com.github.nelson54.lostcities.domain.game.mappers;
 
+import com.github.nelson54.lostcities.domain.CommandEntity;
 import com.github.nelson54.lostcities.domain.game.*;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CommandMapper {
 
-    Command map(Game game, CommandEntity commandEntity){
+    public Command map(Game game, CommandEntity commandEntity){
         Card play = null, discard = null;
         Color color = null;
 
-        Player player = game.getPlayer(commandEntity.getUserId());
+        Player player = game.getPlayer(commandEntity.getUser().getId());
 
         if(commandEntity.getColor() != null) {
             color = Color.parse(commandEntity.getColor());

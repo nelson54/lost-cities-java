@@ -1,0 +1,33 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="dnelson (generated)" id="1507235450795-1">
+        <createTable tableName="game_user">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="game_userPK"/>
+            </column>
+            <column name="match_id" type="BIGINT"/>
+            <column name="user_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dnelson (generated)" id="1507235450795-2">
+        <addUniqueConstraint columnNames="user_id" constraintName="UC_GAME_USERUSER_ID_COL" tableName="game_user"/>
+    </changeSet>
+    <changeSet author="dnelson (generated)" id="1507235450795-3">
+        <addForeignKeyConstraint baseColumnNames="match_id" baseTableName="game_user" constraintName="FK8h39dn676jx3douqgxr73k0h7" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="match"/>
+    </changeSet>
+    <changeSet author="dnelson (generated)" id="1507235450795-4">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="game_user" constraintName="FK92ecx6w1e3wibsbxfgf8cxx70" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="dnelson (generated)" id="1507235450795-5">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="command_entity" constraintName="FKg82yci7igh4dl6avltf5ump7m" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="game_user"/>
+    </changeSet>
+    <changeSet author="dnelson (generated)" id="1507235450795-6">
+        <dropForeignKeyConstraint baseTableName="COMMAND_ENTITY" constraintName="FK_COMMAND_ENTITY_USER_ID"/>
+    </changeSet>
+    <changeSet author="dnelson (generated)" id="1507235450795-7">
+        <dropUniqueConstraint constraintName="CONSTRAINT_7" tableName="JHI_SOCIAL_USER_CONNECTION"/>
+    </changeSet>
+    <changeSet author="dnelson (generated)" id="1507235450795-8">
+        <dropUniqueConstraint constraintName="CONSTRAINT_71" tableName="JHI_SOCIAL_USER_CONNECTION"/>
+    </changeSet>
+</databaseChangeLog>

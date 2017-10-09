@@ -1,36 +1,42 @@
 package com.github.nelson54.lostcities.domain.game;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.nelson54.lostcities.domain.game.board.Board;
 
 import java.util.*;
 
 public class Game {
     private final List<Player> players;
-    private final Board discard;
+    @JsonProperty private final Board discard;
     private final Deque<Card> deck;
     private final long initialSeed;
     private final long currentSeed;
     private PlayerOrder currentPlayer;
 
-    private Game(List<Player> players, Board board, Set<Card> deck) {
+    private Game(Long initialSeed, List<Player> players, Board board, List<Card> deck) {
         this.currentPlayer = PlayerOrder.PLAYER_1;
         this.players = players;
         this.discard = board;
+
+        this.initialSeed = currentSeed = 0L;
+        Random seed = new Random(this.initialSeed);
+        Collections.shuffle(deck, seed);
         this.deck = new LinkedList<>();
         this.deck.addAll(deck);
-        initialSeed = currentSeed = 0L;
-
     }
 
-    public static Game create(Collection<Player> players) {
+    public static Game create(Long initialSeed, Collection<Player> players) {
         List<Player> sortedPlayers = new LinkedList<>();
         sortedPlayers.addAll(players);
         Board board = Board.create();
-        Set<Card> deck = Card.buildDeck();
+        List<Card> deck = Card.buildDeck();
 
-        return new Game(sortedPlayers, board, deck);
+        Game game = new Game(initialSeed, sortedPlayers, board, deck);
+        sortedPlayers.stream().forEach((player)-> player.setGame(game));
+        return game;
     }
 
+    @JsonProperty
     public boolean isOver() {
         return deck.isEmpty();
     }
@@ -48,7 +54,7 @@ public class Game {
         discard.discard(card);
     }
 
-    private Player currentPlayer() {
+    public Player currentPlayer() {
         return players.get(currentPlayer.getOrder());
     }
 
@@ -62,10 +68,13 @@ public class Game {
 
     public Player getPlayer(Long id) {
         return players.stream()
-            .filter((player)-> player.getUser().getId().equals(id))
+            .filter((player)-> player.getGameUser().getId().equals(id))
             .findFirst()
             .orElseThrow(()-> new RuntimeException("User not found."));
     }
 
-
+    @JsonProperty
+    public Integer remainingInDeck() {
+        return deck.size();
+    }
 }

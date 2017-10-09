@@ -1,5 +1,6 @@
 package com.github.nelson54.lostcities.domain.game.board;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.nelson54.lostcities.domain.game.Card;
 import com.github.nelson54.lostcities.domain.game.Color;
 
@@ -9,6 +10,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 public class Board {
+    @JsonProperty
     private final Map<Color, Deque<Card>> cards;
 
     private Board(Map<Color, Deque<Card>> cards) {

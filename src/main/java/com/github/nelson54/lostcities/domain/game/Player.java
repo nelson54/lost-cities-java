@@ -1,22 +1,30 @@
 package com.github.nelson54.lostcities.domain.game;
 
-import com.github.nelson54.lostcities.domain.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.nelson54.lostcities.domain.GameUser;
 import com.github.nelson54.lostcities.domain.game.board.Board;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class Player {
 
-    private final User user;
-    private final Game game;
+    private final GameUser gameUser;
+
+    @JsonIgnore
+    private Game game;
+
+    @JsonProperty
     private final Set<Card> hand;
+
+    @JsonProperty
     private final Board board;
 
-    public Player(User user, Game game, Set<Card> hand, Board board) {
-        this.user = user;
-        this.game = game;
-        this.hand = hand;
-        this.board = board;
+    public Player(GameUser gameUser) {
+        this.gameUser = gameUser;
+        this.hand = new HashSet<>();
+        this.board = Board.create();
     }
 
     public void play(Card card) {
@@ -39,7 +47,11 @@ public class Player {
         hand.add(drew);
     }
 
-    public User getUser() {
-        return user;
+    public GameUser getGameUser() {
+        return gameUser;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
     }
 }

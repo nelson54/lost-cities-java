@@ -1,6 +1,9 @@
 package com.github.nelson54.lostcities.domain.game;
 
-import java.util.HashSet;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,8 +12,13 @@ import java.util.stream.IntStream;
 
 public class Card {
     private static final Pattern cardPattern = Pattern.compile("(YELLOW|BLUE|WHITE|GREEN|RED)\\{(\\d+)\\}\\[(\\d)\\]instance");
+
     private final Integer instance;
+
+    @JsonProperty
     private final Color color;
+
+    @JsonProperty
     private final Integer value;
 
     private Card(Integer instance, Color color, Integer value) {
@@ -49,8 +57,8 @@ public class Card {
 
     }
 
-    protected static Set<Card>  buildDeck() {
-        Set<Card> cards = new HashSet<>();
+    protected static List<Card>  buildDeck() {
+        List<Card> cards = new ArrayList<>();
         Color.stream().forEach((color)-> {
             cards.addAll(buildColor(color));
         });
