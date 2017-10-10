@@ -1,4 +1,7 @@
+const game = require('./game');
 const Card = require('./card');
+const HandGroup = require('./card-groups/hand-group');
+const PlayStack = require('./card-groups/play-stack');
 
 class LostCities extends Phaser.State {
 
@@ -8,6 +11,7 @@ class LostCities extends Phaser.State {
     }
 
     preload() {
+        game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
         this.load.json('gameInfo', `/api/game/${this.gameId}`);
 
         this.game.load.image('image-2', '/' + require('../content/images/cards/2.png'));
@@ -25,50 +29,72 @@ class LostCities extends Phaser.State {
         this.game.load.image('image-red', '/' + require('../content/images/cards/red.png'));
         this.game.load.image('image-white', '/' + require('../content/images/cards/white.png'));
         this.game.load.image('image-yellow', '/' + require('../content/images/cards/yellow.png'));
+
+        this.game.load.image('play-button', '/' + require('../content/images/play-button.png'));
+        this.game.load.image('discard-button', '/' + require('../content/images/discard-button.png'));
     }
 
     create() {
-        this.cards = [];
+
+        window.playStack = this.playStack = new PlayStack(2);
+        window.handGroup = this.handGroup = new HandGroup();
+
         let gameInfo = this.cache.getJSON('gameInfo');
-        let cardData = gameInfo.players[0].hand[0];
 
-        this.cards.push(new Card(cardData.color, cardData.value, cardData.multiplier));
+        this.buildHand(gameInfo.players[0]);
 
-        cardData = gameInfo.players[0].hand[1];
+        game.scale.onSizeChange.add(() => {
+            this.handGroup.properties.maxWidth = window.innerWidth;
+            this.updateLayout();
+        });
 
-        this.cards.push(new Card(cardData.color, cardData.value, cardData.multiplier));
+        this.handGroup.onPlay.add((card)=> {
+            this.handGroup.remove(card);
+            this.playStack.addChild(card);
 
-        let card = this.cards[1];
+            game.add.tween(card)
+                .to({x: game.world.centerX, y: game.world.centerY}, 600, "Linear", true)
+                .onComplete.add(()=> {
+                    this.updateLayout();
+                })
+        });
 
-        card.x = this.cards[0].x + this.cards[0].width + 10;
+        this.handGroup.onDiscard.add((card)=> {
+            this.handGroup.remove(card);
+            game.add.existing(card);
 
-        cardData = gameInfo.players[0].hand[2];
-        this.cards.push(new Card(cardData.color, cardData.value, cardData.multiplier));
-
-        card = this.cards[2];
-
-        card.x = this.cards[1].x + this.cards[1].width + 10;
-
-        cardData = gameInfo.players[0].hand[3];
-        this.cards.push(new Card(cardData.color, cardData.value, cardData.multiplier));
-
-        card = this.cards[3];
-
-        card.x = this.cards[2].x + this.cards[2].width + 10;
-
-        cardData = gameInfo.players[0].hand[4];
-        this.cards.push(new Card(cardData.color, cardData.value, cardData.multiplier));
-
-        card = this.cards[4];
-
-        card.x = this.cards[3].x + this.cards[3].width + 10;
-
-
-        //console.log(gameInfo);
+            game.add.tween(card)
+                .to({x: game.world.centerX, y: game.world.centerY}, 600, "Linear", true)
+                .onComplete.add(()=> {
+                    this.updateLayout();
+                })
+        });
     }
 
-    update() {
+    updateLayout() {
+        this.handGroup.updateLayout();
+        this.playStack.updateLayout();
+    }
 
+    buildHand(player) {
+        let prev = null;
+        player.hand.forEach((next) => {
+            prev = this.addCard(next, prev);
+        });
+
+        this.updateLayout();
+    }
+
+    addCard(nextCardData, prevCard) {
+        let nextCard = new Card(nextCardData.color, nextCardData.value, nextCardData.multiplier);
+
+        if(prevCard) {
+            nextCard.x = prevCard.x + prevCard.width + 10;
+        }
+
+        this.handGroup.addChild(nextCard);
+
+        return nextCard;
     }
 };
 

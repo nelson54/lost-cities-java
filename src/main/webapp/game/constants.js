@@ -1,0 +1,6 @@
+module.exports = {
+    HAND_SIZE: 8,
+    CARD_HIGHLIGHT_ANIMATION_SPEED: 500,
+    BASECARD_HEIGHT: 278,
+    BASECARD_WIDTH: 351
+};
