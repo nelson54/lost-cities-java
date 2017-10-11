@@ -1,7 +1,8 @@
 const game = require('./game');
 const Card = require('./card');
 const HandGroup = require('./card-groups/hand-group');
-const PlayStack = require('./card-groups/play-stack');
+const PlayGroup = require('./card-groups/play-group');
+const cardLayoutTool = require('./utils/card-layout-tool')
 
 class LostCities extends Phaser.State {
 
@@ -29,14 +30,19 @@ class LostCities extends Phaser.State {
         this.game.load.image('image-red', '/' + require('../content/images/cards/red.png'));
         this.game.load.image('image-white', '/' + require('../content/images/cards/white.png'));
         this.game.load.image('image-yellow', '/' + require('../content/images/cards/yellow.png'));
+        this.game.load.image('image-deck', '/' + require('../content/images/cards/deck.png'));
 
+        this.game.load.image('draw-button', '/' + require('../content/images/draw-button.png'));
         this.game.load.image('play-button', '/' + require('../content/images/play-button.png'));
         this.game.load.image('discard-button', '/' + require('../content/images/discard-button.png'));
     }
 
     create() {
 
-        window.playStack = this.playStack = new PlayStack(2);
+        window.playGroup = this.playGroup = new PlayGroup();
+        window.drawButton = this.deck = new Card('deck');
+        this.deck.showDrawButton();
+        this.game.add.existing(this.deck);
         window.handGroup = this.handGroup = new HandGroup();
 
         let gameInfo = this.cache.getJSON('gameInfo');
@@ -50,13 +56,8 @@ class LostCities extends Phaser.State {
 
         this.handGroup.onPlay.add((card)=> {
             this.handGroup.remove(card);
-            this.playStack.addChild(card);
-
-            game.add.tween(card)
-                .to({x: game.world.centerX, y: game.world.centerY}, 600, "Linear", true)
-                .onComplete.add(()=> {
-                    this.updateLayout();
-                })
+            this.playGroup.play(card);
+            this.handGroup.updateLayout();
         });
 
         this.handGroup.onDiscard.add((card)=> {
@@ -73,7 +74,10 @@ class LostCities extends Phaser.State {
 
     updateLayout() {
         this.handGroup.updateLayout();
-        this.playStack.updateLayout();
+        this.playGroup.updateLayout();
+        this.deck.x = cardLayoutTool.xByIndex(5);
+        this.deck.width = cardLayoutTool.width;
+        this.deck.height = cardLayoutTool.height;
     }
 
     buildHand(player) {

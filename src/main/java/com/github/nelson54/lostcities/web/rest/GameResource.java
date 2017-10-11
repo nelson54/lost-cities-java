@@ -50,6 +50,10 @@ public class GameResource {
     public ResponseEntity<Game> playTurn(@PathVariable Long gameId, @RequestBody CommandEntity commandEntity) {
         Game game = gameService.applyCommand(gameId, commandEntity);
 
+        Match match = matchService.findOne(gameId);
+        match.addCommands(commandEntity);
+        matchService.save(match);
+
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(game));
     }
 

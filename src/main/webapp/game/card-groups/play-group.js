@@ -1,71 +1,34 @@
-const game = require('./game');
-const CONSTANTS = require('./constants');
-const PropertyWatchingChangeEventProxy = require('./utils/property-watching-change-event-proxy');
-const clone = require('./utils/clone');
-const baseWidth = 278;
-const baseHeight = 351;
-const defaultProperties = {
-    baseX: 0,
-    baseY: 0,
-    maxWidth: null,
-    padding: 10,
-    margin: 20,
-    distanceFromBottom: 30
-};
-
-class HandGroup extends Phaser.Group {
+const game = require('../game');
+const PlayStack = require('./play-stack');
+module.exports = class PlayGroup extends Phaser.Group {
     constructor() {
         super(game);
-
-        this.properties = clone(defaultProperties);
-        this.properties.maxWidth = window.innerWidth || 1028;
-
-        this.onChildInputOver.add((card) => {
-            game.add.tween(card).to(
-                { y: this.properties.baseY - (this.properties.height *.66) },
-                CONSTANTS.CARD_HIGHLIGHT_ANIMATION_SPEED,
-                "Linear",
-                true);
-        });
-
-        this.onChildInputOut.add((card) => {
-            if(!card.getBounds().contains(game.input.x, game.input.y)) {
-                game.add.tween(card)
-                    .to({y: this.properties.baseY}, CONSTANTS.CARD_HIGHLIGHT_ANIMATION_SPEED, "Linear", true);
-            }
-        });
+        this.colors = ['YELLOW', 'BLUE', 'WHITE', 'GREEN', 'RED'];
+        this.stacks = {
+            'YELLOW': new PlayStack(0),
+            'BLUE': new PlayStack(1),
+            'WHITE': new PlayStack(2),
+            'GREEN': new PlayStack(3),
+            'RED': new PlayStack(4)
+        };
+        Object.keys(this.stacks)
+            .forEach((color) => this.addChild(this.stacks[color]));
     }
 
-    updateLayout () {
-        let prev = null;
-        let scale = this.calculateCardScale();
-
-        this.properties.width = baseWidth * scale;
-        this.properties.height = baseHeight * scale;
-
-        if(this.properties.distanceFromBottom) {
-            this.properties.baseY = window.innerHeight - (this.properties.height * .33) - this.properties.distanceFromBottom;
-        }
-
-        this.children.forEach((next) => {
-            if(prev) {
-                next.x = prev.x + prev.width + this.properties.padding;
-            } else {
-                next.x = this.properties.baseX + this.properties.margin;
-            }
-
-            next.y = this.properties.baseY;
-
-            next.width =  this.properties.width;
-            next.height = this.properties.height;
-            prev = next;
-        })
+    updateLayout() {
+        Object.keys(this.stacks)
+            .forEach((color) => this.stacks[color].updateLayout())
     }
 
-    calculateCardScale () {
-        return ((this.properties.maxWidth - ((this.properties.padding * 6) + (this.properties.margin * 2))) / 8) / baseWidth;
+    play(card) {
+        this.stacks[card.color].addChild(card);
+        this.animateCard(card);
     }
-}
 
-module.exports = PropertyWatchingChangeEventProxy.create(HandGroup, Object.keys(defaultProperties), (obj)=> obj.updateLayout(), 'properties');
+    animateCard(card) {
+        game.add.tween(card)
+            .to({x: game.world.centerX, y: game.world.centerY}, 600, "Linear", true)
+            .onComplete.add(()=> this.stacks[card.color].updateLayout())
+    }
+};
 
