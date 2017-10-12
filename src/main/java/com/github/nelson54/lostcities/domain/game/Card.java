@@ -13,6 +13,7 @@ import java.util.stream.IntStream;
 public class Card {
     private static final Pattern cardPattern = Pattern.compile("(YELLOW|BLUE|WHITE|GREEN|RED)\\{(\\d+)\\}\\[(\\d)\\]instance");
 
+    @JsonProperty
     private final Integer instance;
 
     @JsonProperty
@@ -20,6 +21,19 @@ public class Card {
 
     @JsonProperty
     private final Integer value;
+
+    public static Card parse(String cardString) {
+        Matcher matcher = cardPattern.matcher(cardString);
+        if(matcher.find()) {
+            Color color = Color.parse(matcher.group(1));
+            Integer value = Integer.parseInt(matcher.group(2));
+            Integer instance = Integer.parseInt(matcher.group(3));
+
+            return new Card(instance, color, value);
+        } else {
+            throw new RuntimeException("Unable to parse card: " + cardString);
+        }
+    }
 
     private Card(Integer instance, Color color, Integer value) {
         this.instance = instance;
@@ -39,22 +53,12 @@ public class Card {
         }
     }
 
-    public Boolean isMultiplier() {
-        return value == 1;
+    public Integer getInstance() {
+        return instance;
     }
 
-    public static Card parse(String cardString) {
-        Matcher matcher = cardPattern.matcher(cardString);
-        if(matcher.find()) {
-            Color color = Color.parse(matcher.group(1));
-            Integer value = Integer.parseInt(matcher.group(2));
-            Integer instance = Integer.parseInt(matcher.group(3));
-
-            return new Card(0, color, value);
-        } else {
-            throw new RuntimeException("Unable to parse card: " + cardString);
-        }
-
+    public Boolean isMultiplier() {
+        return value == 1;
     }
 
     protected static List<Card>  buildDeck() {
@@ -76,6 +80,11 @@ public class Card {
             .collect(Collectors.toSet()));
 
         return cards;
+    }
+
+    @JsonProperty
+    public String toString() {
+        return "("+this.getColor().toString()+"){"+this.getValue()+"}["+this.getInstance()+"]instance";
     }
 
     @Override

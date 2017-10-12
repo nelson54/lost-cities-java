@@ -34,6 +34,9 @@ class LostCities extends Phaser.State {
 
         this.game.load.image('draw-button', '/' + require('../content/images/draw-button.png'));
         this.game.load.image('play-button', '/' + require('../content/images/play-button.png'));
+        this.game.load.image('draw-button', '/' + require('../content/images/undo-button.png'));
+        this.game.load.image('play-button', '/' + require('../content/images/done-button.png'));
+
         this.game.load.image('discard-button', '/' + require('../content/images/discard-button.png'));
     }
 
