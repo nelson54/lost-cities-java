@@ -1,19 +1,22 @@
 const game = require('./game');
-const Card = require('./card');
+
 const HandGroup = require('./card-groups/hand-group');
 const PlayGroup = require('./card-groups/play-group');
-const cardLayoutTool = require('./utils/card-layout-tool')
+const PlayerViewFactory = require('./ui/player-view-factory');
+const cardLayoutTool = require('./utils/card-layout-tool');
 
 class LostCities extends Phaser.State {
 
     constructor() {
         super();
-        this.gameId = document.getElementsByTagName('body')[0].dataset.gameId;
+        game.id = document.getElementsByTagName('body')[0].dataset.gameId;
+
+
     }
 
     preload() {
         game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
-        this.load.json('gameInfo', `/api/game/${this.gameId}`);
+        this.load.json('gameInfo', `/api/game/${game.id}`);
 
         this.game.load.image('image-2', '/' + require('../content/images/cards/2.png'));
         this.game.load.image('image-3', '/' + require('../content/images/cards/3.png'));
@@ -41,67 +44,10 @@ class LostCities extends Phaser.State {
     }
 
     create() {
-
-        window.playGroup = this.playGroup = new PlayGroup();
-        window.drawButton = this.deck = new Card('deck');
-        this.deck.showDrawButton();
-        this.game.add.existing(this.deck);
-        window.handGroup = this.handGroup = new HandGroup();
-
         let gameInfo = this.cache.getJSON('gameInfo');
+        let playerData = gameInfo.players[0];
 
-        this.buildHand(gameInfo.players[0]);
-
-        game.scale.onSizeChange.add(() => {
-            this.handGroup.properties.maxWidth = window.innerWidth;
-            this.updateLayout();
-        });
-
-        this.handGroup.onPlay.add((card)=> {
-            this.handGroup.remove(card);
-            this.playGroup.play(card);
-            this.handGroup.updateLayout();
-        });
-
-        this.handGroup.onDiscard.add((card)=> {
-            this.handGroup.remove(card);
-            game.add.existing(card);
-
-            game.add.tween(card)
-                .to({x: game.world.centerX, y: game.world.centerY}, 600, "Linear", true)
-                .onComplete.add(()=> {
-                    this.updateLayout();
-                })
-        });
-    }
-
-    updateLayout() {
-        this.handGroup.updateLayout();
-        this.playGroup.updateLayout();
-        this.deck.x = cardLayoutTool.xByIndex(5);
-        this.deck.width = cardLayoutTool.width;
-        this.deck.height = cardLayoutTool.height;
-    }
-
-    buildHand(player) {
-        let prev = null;
-        player.hand.forEach((next) => {
-            prev = this.addCard(next, prev);
-        });
-
-        this.updateLayout();
-    }
-
-    addCard(nextCardData, prevCard) {
-        let nextCard = new Card(nextCardData.color, nextCardData.value, nextCardData.multiplier);
-
-        if(prevCard) {
-            nextCard.x = prevCard.x + prevCard.width + 10;
-        }
-
-        this.handGroup.addChild(nextCard);
-
-        return nextCard;
+        this.player = PlayerViewFactory(playerData);
     }
 };
 
