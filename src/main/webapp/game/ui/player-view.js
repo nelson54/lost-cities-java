@@ -5,9 +5,13 @@ const TurnManager = require('../turn-manager');
 module.exports = class PlayerView {
 
     constructor(playerData) {
+        this.gameUserId = playerData.id;
         this.id = playerData.user.id;
         this.login = playerData.user.login;
+
         this.turnManager = new TurnManager();
+        this.turnManager.nextTurn(this.gameUserId);
+
         this._deck = null;
         this._hand = null;
         this._discard = null;
@@ -54,6 +58,8 @@ module.exports = class PlayerView {
         let hand = this._hand = value;
 
         hand.onPlay.add((card)=> {
+            this.turnManager.command.play(card);
+            this.turnManager.apply();
             hand.remove(card);
             this.play.play(card);
             hand.updateLayout();

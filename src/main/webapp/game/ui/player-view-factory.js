@@ -40,7 +40,7 @@ function buildHand(player, playerData) {
  * @param {Card} prevCard
  */
 function addCard(player, nextCardData, prevCard) {
-    let nextCard = new Card(nextCardData.color, nextCardData.value, nextCardData.multiplier);
+    let nextCard = new Card(nextCardData.color, nextCardData.value, nextCardData.multiplier, nextCardData.instance);
 
     if(prevCard) {
         nextCard.x = prevCard.x + prevCard.width + 10;

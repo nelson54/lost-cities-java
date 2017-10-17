@@ -3,14 +3,15 @@ const Command = require('./commands/command');
 module.exports = class TurnManager {
 
     constructor(gameId) {
-        this.gameId = gameId;
+        this.commandService = new CommandService();
     }
 
     nextTurn(gameUserId) {
         this.command = new Command(gameUserId);
     }
 
-    finishTurn() {
-
+    apply() {
+        let commandData = this.command.toJson();
+        this.commandService.execute(commandData);
     }
 }

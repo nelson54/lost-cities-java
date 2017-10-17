@@ -1,14 +1,16 @@
-const clients = require('restify-clients');
-
-const commandService = clients.createJsonClient({
-    url: 'http://localhost:8081',
-});
+const game = require('../game');
 
 module.exports = class CommandService {
 
-    execute(gameId, command) {
-        command.gameId = gameId;
-        commandService.put('/game/:gameId/play', command)
+    execute(command) {
+        console.log(command);
+        axios.put(`/api/game/${game.id}/play`, command)
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 }
 

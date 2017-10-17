@@ -1,4 +1,8 @@
 module.exports = class Command {
+    constructor(gameUserId) {
+        this.gameUserId = gameUserId;
+    }
+
     play(card) {
         this._play = card;
     }
@@ -23,7 +27,9 @@ module.exports = class Command {
         return {
             color: this._color,
             play: this._play.toString(),
-            discard: this._discard.toString()
+            discard: (this._discard)
+                ? this._discard.toString() : null,
+            gameUserId: this.gameUserId
         }
     }
 };

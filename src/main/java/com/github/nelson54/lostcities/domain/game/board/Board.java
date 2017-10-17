@@ -42,7 +42,9 @@ public class Board {
     }
 
     private boolean isValidPlay (Card card) {
-        return getColor(card).peekLast().getValue() <= card.getValue();
+        Deque<Card> cards = getColor(card);
+
+        return cards.isEmpty() || cards.peekLast().getValue() <= card.getValue();
     }
 
     private Deque<Card> getColor(Card card) {

@@ -64,6 +64,6 @@ module.exports = class Card extends Sprite {
     }
 
     toString() {
-        return `(${this.color}){${this.value}[${this.instance}]instance`
+        return `${this.color}{${this.value}}[${this.instance}]instance`
     }
 };
