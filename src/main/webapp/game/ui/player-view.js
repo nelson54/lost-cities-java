@@ -21,6 +21,8 @@ module.exports = class PlayerView {
             this.hand.properties.maxWidth = window.innerWidth;
             this.updateLayout();
         });
+
+        window.playerView = this;
     }
 
     updateLayout() {

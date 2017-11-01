@@ -1,6 +1,5 @@
 package com.github.nelson54.lostcities.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -27,10 +26,6 @@ public class GameUser implements Serializable {
     @JoinColumn(unique = true)
     private User user;
 
-    @OneToOne(mappedBy = "user")
-    @JsonIgnore
-    private CommandEntity commandEntity;
-
     @ManyToOne
     private Match match;
 
@@ -54,19 +49,6 @@ public class GameUser implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public CommandEntity getCommandEntity() {
-        return commandEntity;
-    }
-
-    public GameUser commandEntity(CommandEntity commandEntity) {
-        this.commandEntity = commandEntity;
-        return this;
-    }
-
-    public void setCommandEntity(CommandEntity commandEntity) {
-        this.commandEntity = commandEntity;
     }
 
     public Match getMatch() {

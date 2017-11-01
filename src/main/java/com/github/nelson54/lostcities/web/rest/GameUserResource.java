@@ -91,7 +91,6 @@ public class GameUserResource {
             log.debug("REST request to get all GameUsers where commandEntity is null");
             return StreamSupport
                 .stream(gameUserRepository.findAll().spliterator(), false)
-                .filter(gameUser -> gameUser.getCommandEntity() == null)
                 .collect(Collectors.toList());
         }
         log.debug("REST request to get all GameUsers");

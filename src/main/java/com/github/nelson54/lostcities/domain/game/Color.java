@@ -25,4 +25,10 @@ public enum Color {
             .findFirst()
             .orElseThrow(() ->new RuntimeException("Unable to convert string to color"));
     }
+
+    public String toSring() {
+        return super.toString();
+    }
+
+
 }

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -70,21 +69,21 @@ public class Card {
         return cards;
     }
 
-    private static Set<Card> buildColor(Color color) {
-        Set<Card> cards =  IntStream.rangeClosed(2, 10)
+    private static List<Card> buildColor(Color color) {
+        List<Card> cards =  IntStream.rangeClosed(2, 10)
             .mapToObj((i) -> new Card(0, color, i))
-            .collect(Collectors.toSet());
+            .collect(Collectors.toList());
 
         cards.addAll(IntStream.rangeClosed(0, 2)
             .mapToObj((i) -> new Card(i, color, 1))
-            .collect(Collectors.toSet()));
+            .collect(Collectors.toList()));
 
         return cards;
     }
 
     @JsonProperty
     public String toString() {
-        return "("+this.getColor().toString()+"){"+this.getValue()+"}["+this.getInstance()+"]instance";
+        return String.format("%s{%d}[%d]instance", color, value, instance);
     }
 
     @Override

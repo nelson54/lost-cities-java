@@ -34,7 +34,7 @@ public class Board {
     }
 
     public void play(Card card) {
-        if(!isValidPlay(card)) {
+        if(!isValidPlay(card) && false) {
             throw new IllegalPlayException();
         } else {
             getColor(card).offerLast(card);

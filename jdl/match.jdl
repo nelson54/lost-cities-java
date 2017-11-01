@@ -18,7 +18,6 @@ relationship OneToMany {
 
 relationship OneToOne {
     GameUser{user} to User{gameUser}
-	CommandEntity{user} to GameUser{commandEntity}
 }
 
 

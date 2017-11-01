@@ -5,6 +5,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -31,11 +32,15 @@ public class CommandEntity implements Serializable {
     @Column(name = "discard")
     private String discard;
 
+    @Column(name = "addedAt")
+    private LocalDateTime addedAt;
+
     @OneToOne
-    @JoinColumn(unique = true)
+    @JoinColumn()
     private GameUser user;
 
     @ManyToOne
+    @JoinColumn(name="match_id")
     private Match match;
 
     // jhipster-needle-entity-add-field - Jhipster will add fields here, do not remove
@@ -99,6 +104,14 @@ public class CommandEntity implements Serializable {
         this.user = gameUser;
     }
 
+    public LocalDateTime getAddedAt() {
+        return addedAt;
+    }
+
+    public void setAddedAt(LocalDateTime addedAt) {
+        this.addedAt = addedAt;
+    }
+
     public Match getMatch() {
         return match;
     }
@@ -130,16 +143,12 @@ public class CommandEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
-    }
-
-    @Override
-    public String toString() {
-        return "CommandEntity{" +
-            "id=" + getId() +
-            ", color='" + getColor() + "'" +
-            ", play='" + getPlay() + "'" +
-            ", discard='" + getDiscard() + "'" +
-            "}";
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (color != null ? color.hashCode() : 0);
+        result = 31 * result + (play != null ? play.hashCode() : 0);
+        result = 31 * result + (discard != null ? discard.hashCode() : 0);
+        result = 31 * result + (user != null ? user.hashCode() : 0);
+        result = 31 * result + (match != null ? match.hashCode() : 0);
+        return result;
     }
 }

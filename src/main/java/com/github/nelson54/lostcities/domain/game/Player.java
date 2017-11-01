@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.nelson54.lostcities.domain.GameUser;
 import com.github.nelson54.lostcities.domain.game.board.Board;
+import com.github.nelson54.lostcities.domain.game.exceptions.GameException;
+import com.github.nelson54.lostcities.domain.game.exceptions.UnableToPlayCardException;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -27,7 +29,11 @@ public class Player {
         this.board = Board.create();
     }
 
-    public void play(Card card) {
+    public void play(Card card) throws GameException {
+        if(!hand.contains(card)) {
+            throw new UnableToPlayCardException(card);
+        }
+
         hand.remove(card);
         board.play(card);
     }
@@ -45,6 +51,10 @@ public class Player {
     public void draw(Color color) {
         Card drew = game.draw(color);
         hand.add(drew);
+    }
+
+    public Set<Card> getHand() {
+        return hand;
     }
 
     public GameUser getGameUser() {

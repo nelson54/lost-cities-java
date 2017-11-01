@@ -1,9 +1,11 @@
 package com.github.nelson54.lostcities.domain.game;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.nelson54.lostcities.domain.Match;
 import com.github.nelson54.lostcities.domain.game.board.Board;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Game {
     private final List<Player> players;
@@ -12,28 +14,37 @@ public class Game {
     private final long initialSeed;
     private final long currentSeed;
     private PlayerOrder currentPlayer;
+    private Match match;
 
-    private Game(Long initialSeed, List<Player> players, Board board, List<Card> deck) {
+    private Game(Match match, List<Player> players, Board board, List<Card> deck) {
+        this.match = match;
         this.currentPlayer = PlayerOrder.PLAYER_1;
         this.players = players;
         this.discard = board;
 
-        this.initialSeed = currentSeed = 0L;
+        this.initialSeed = currentSeed = match.getInitialSeed();
         Random seed = new Random(this.initialSeed);
         Collections.shuffle(deck, seed);
         this.deck = new LinkedList<>();
         this.deck.addAll(deck);
     }
 
-    public static Game create(Long initialSeed, Collection<Player> players) {
+    public static Game create(Match match) {
         List<Player> sortedPlayers = new LinkedList<>();
-        sortedPlayers.addAll(players);
+        sortedPlayers.addAll(playersFromMatch(match));
         Board board = Board.create();
         List<Card> deck = Card.buildDeck();
 
-        Game game = new Game(initialSeed, sortedPlayers, board, deck);
-        sortedPlayers.stream().forEach((player)-> player.setGame(game));
+        Game game = new Game(match, sortedPlayers, board, deck);
+        sortedPlayers.forEach((player)-> player.setGame(game));
         return game;
+    }
+
+    public static List<Player> playersFromMatch(Match match) {
+        return  match.getGameUsers()
+            .stream()
+            .map(Player::new)
+            .collect(Collectors.toList());
     }
 
     @JsonProperty
@@ -73,8 +84,20 @@ public class Game {
             .orElseThrow(()-> new RuntimeException("User not found."));
     }
 
+    public Match getMatch() {
+        return match;
+    }
+
     @JsonProperty
     public Integer remainingInDeck() {
         return deck.size();
+    }
+
+    public Board getDiscard() {
+        return discard;
+    }
+
+    public Deque<Card> getDeck() {
+        return deck;
     }
 }

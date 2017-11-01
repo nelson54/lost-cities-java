@@ -6,9 +6,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A Match.
@@ -31,12 +29,13 @@ public class Match implements Serializable {
     @OneToMany(mappedBy = "match", fetch=FetchType.EAGER)
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<GameUser> gameUsers = new HashSet<>();
+    private List<GameUser> gameUsers = new LinkedList<>();
 
-    @OneToMany(mappedBy = "match", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "match", fetch=FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<CommandEntity> commands = new HashSet<>();
+    @OrderBy("addedAt ASC")
+    private List<CommandEntity> commands = new LinkedList<>();
 
     // jhipster-needle-entity-add-field - Jhipster will add fields here, do not remove
     public Long getId() {
@@ -60,11 +59,11 @@ public class Match implements Serializable {
         this.initialSeed = initialSeed;
     }
 
-    public Set<GameUser> getGameUsers() {
+    public List<GameUser> getGameUsers() {
         return gameUsers;
     }
 
-    public Match gameUsers(Set<GameUser> gameUsers) {
+    public Match gameUsers(List<GameUser> gameUsers) {
         this.gameUsers = gameUsers;
         return this;
     }
@@ -81,15 +80,15 @@ public class Match implements Serializable {
         return this;
     }
 
-    public void setGameUsers(Set<GameUser> gameUsers) {
+    public void setGameUsers(List<GameUser> gameUsers) {
         this.gameUsers = gameUsers;
     }
 
-    public Set<CommandEntity> getCommands() {
+    public List<CommandEntity> getCommands() {
         return commands;
     }
 
-    public Match commands(Set<CommandEntity> commandEntities) {
+    public Match commands(LinkedList<CommandEntity> commandEntities) {
         this.commands = commandEntities;
         return this;
     }
@@ -106,7 +105,7 @@ public class Match implements Serializable {
         return this;
     }
 
-    public void setCommands(Set<CommandEntity> commandEntities) {
+    public void setCommands(LinkedList<CommandEntity> commandEntities) {
         this.commands = commandEntities;
     }
 

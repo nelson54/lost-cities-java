@@ -1,5 +1,6 @@
 package com.github.nelson54.lostcities.config;
 
+import com.github.nelson54.lostcities.domain.CommandEntity;
 import io.github.jhipster.config.JHipsterProperties;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
@@ -13,9 +14,6 @@ import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.cloud.client.serviceregistry.Registration;
 import org.springframework.context.annotation.*;
 
 @Configuration
@@ -48,8 +46,8 @@ public class CacheConfiguration {
             cm.createCache(com.github.nelson54.lostcities.domain.Match.class.getName(), jcacheConfiguration);
             cm.createCache(com.github.nelson54.lostcities.domain.Match.class.getName() + ".users", jcacheConfiguration);
             cm.createCache(com.github.nelson54.lostcities.domain.Match.class.getName() + ".commands", jcacheConfiguration);
-            cm.createCache(com.github.nelson54.lostcities.domain.CommandEntity.class.getName(), jcacheConfiguration);
-            cm.createCache(com.github.nelson54.lostcities.domain.CommandEntity.class.getName() + ".matches", jcacheConfiguration);
+            cm.createCache(CommandEntity.class.getName(), jcacheConfiguration);
+            cm.createCache(CommandEntity.class.getName() + ".matches", jcacheConfiguration);
             cm.createCache(com.github.nelson54.lostcities.domain.GameUser.class.getName(), jcacheConfiguration);
             cm.createCache(com.github.nelson54.lostcities.domain.Match.class.getName() + ".gameUsers", jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry

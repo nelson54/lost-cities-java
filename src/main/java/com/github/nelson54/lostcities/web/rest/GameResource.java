@@ -5,11 +5,9 @@ import com.github.nelson54.lostcities.domain.CommandEntity;
 import com.github.nelson54.lostcities.domain.GameUser;
 import com.github.nelson54.lostcities.domain.Match;
 import com.github.nelson54.lostcities.domain.User;
-import com.github.nelson54.lostcities.domain.game.Command;
 import com.github.nelson54.lostcities.domain.game.Game;
 import com.github.nelson54.lostcities.repository.CommandEntityRepository;
 import com.github.nelson54.lostcities.repository.GameUserRepository;
-import com.github.nelson54.lostcities.service.CommandService;
 import com.github.nelson54.lostcities.service.GameService;
 import com.github.nelson54.lostcities.service.MatchService;
 import com.github.nelson54.lostcities.service.UserService;
@@ -18,9 +16,10 @@ import io.github.jhipster.web.util.ResponseUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api")
@@ -45,9 +44,9 @@ public class GameResource {
     @GetMapping("/game/{gameId}")
     @Timed
     public ResponseEntity<Game> getGame(@PathVariable Long gameId) {
-        Game game = gameService.getGame(gameId);
+        Optional<Game> game = gameService.getGame(gameId);
 
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(game));
+        return ResponseUtil.wrapOrNotFound(game);
     }
 
 
@@ -60,21 +59,16 @@ public class GameResource {
         CommandEntity commandEntity = new CommandEntity();
 
         commandEntity.setUser(gameUser);
-        commandEntity.setMatch(match);
 
         commandEntity.setColor(commandDto.getColor());
         commandEntity.setDiscard(commandDto.getDiscard());
         commandEntity.setPlay(commandDto.getPlay());
+        commandEntity.setAddedAt(LocalDateTime.now());
 
+        match.addCommands(commandEntity);
+        match = matchService.save(match);
 
-        Game game = gameService.applyCommand(gameId, commandEntity);
-
-        //match.addCommands(commandEntity);
-        //match = matchService.save(match);
-
-        commandEntity = commandEntityRepository.save(commandEntity);
-
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(game));
+        return ResponseUtil.wrapOrNotFound(gameService.getGame(match));
     }
 
     @PostMapping("/game")
@@ -98,7 +92,7 @@ public class GameResource {
         User user = userService.getUserWithAuthorities();
         GameUser gameUser = gameUserRepository.findByUserId(user.getId());
         Match match = matchService.findOne(gameId);
-        Set<GameUser> users = match.getGameUsers();
+        List<GameUser> users = match.getGameUsers();
 
         if(users.contains(gameUser)) {
 
