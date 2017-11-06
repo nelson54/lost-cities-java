@@ -46,6 +46,7 @@ describe('account', () => {
         element.all(by.css('.alert-success span')).getAttribute('jhiTranslate').then((value) => {
             expect(value).toMatch(expect2);
         });
+
     });
 
     it('should be able to update settings', () => {

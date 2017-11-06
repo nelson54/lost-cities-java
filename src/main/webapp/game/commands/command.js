@@ -1,5 +1,6 @@
 module.exports = class Command {
-    constructor(gameUserId) {
+    constructor(gameId, gameUserId) {
+        this.gameId = gameId;
         this.gameUserId = gameUserId;
     }
 

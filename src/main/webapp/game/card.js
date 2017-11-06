@@ -1,11 +1,11 @@
+const {Sprite, Signal} = require('phaser');
+
 const game = require('./game');
 const Button = require('./button');
 
-const Sprite = Phaser.Sprite;
-const Signal = Phaser.Signal;
-
 module.exports = class Card extends Sprite {
     constructor(color, value, isMultiplier, instance) {
+        value = value || 1;
         super(game, 0, 0, `image-${color.toLowerCase()}`);
 
         let valueSprite = new Sprite(game, 10, 5, `image-${value||'mult'}`);

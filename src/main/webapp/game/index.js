@@ -1,3 +1,7 @@
+const GameService = require('./services/game-service');
+
+window.gameService = new GameService();
+
 
 
 let callback = function(){

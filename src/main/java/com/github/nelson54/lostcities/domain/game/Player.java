@@ -64,4 +64,8 @@ public class Player {
     public void setGame(Game game) {
         this.game = game;
     }
+
+    public Board getBoard() {
+        return board;
+    }
 }

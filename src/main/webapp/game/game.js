@@ -1,4 +1,6 @@
-class Game extends Phaser.Game {
+const Game = require('phaser').Game;
+
+class LostCitiesGame extends Game {
 
     constructor() {
         super(window.innerWidth, window.innerHeight, Phaser.AUTO, '', null);
@@ -7,4 +9,4 @@ class Game extends Phaser.Game {
 };
 
 
-module.exports = new Game();
+module.exports = new LostCitiesGame();

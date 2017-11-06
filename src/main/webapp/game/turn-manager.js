@@ -1,9 +1,9 @@
-const CommandService = require('./services/command-service');
+const GameService = require('./services/game-service');
 const Command = require('./commands/command');
 module.exports = class TurnManager {
 
     constructor(gameId) {
-        this.commandService = new CommandService();
+        this.gameService = new GameService();
     }
 
     nextTurn(gameUserId) {
@@ -12,6 +12,6 @@ module.exports = class TurnManager {
 
     apply() {
         let commandData = this.command.toJson();
-        this.commandService.execute(commandData);
+        this.gameService.execute(commandData);
     }
-}
+};
