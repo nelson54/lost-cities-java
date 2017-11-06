@@ -6,7 +6,7 @@ const Card = require('./card');
 const USERNAME = 'derek';
 const PASSWORD = 'derek';
 const URL = 'http://localhost:8080';
-const gameId = 1652;
+const gameId = 1151;
 
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 
