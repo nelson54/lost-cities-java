@@ -3,10 +3,10 @@ const Command = require('../../../main/webapp/game/commands/command');
 const Authenticator = require('./authenticator');
 const Card = require('./card');
 
-const USERNAME = 'derek';
-const PASSWORD = 'derek';
+const USERNAME = 'user';
+const PASSWORD = 'user';
 const URL = 'http://localhost:8080';
-const gameId = 1151;
+const gameId = 1001;
 
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 
@@ -48,19 +48,34 @@ class GameServiceTest {
 
 let gameTest = new GameServiceTest();
 
-gameTest.getGame(gameId).then((game)=> {
-    let command = new Command(gameId, game.gameUserId);
+let playCard;
+let discardCard;
 
-    let card = game.hand[0];
+gameTest.getGame(gameId)
+    .then((game)=> {
+        let command = new Command(gameId, game.gameUserId);
 
-    console.log(`Playing card: ${card.toString()}`);
+        let card = game.hand[0];
 
-    command.play(card);
-    command.draw();
+        console.log(`Playing card: ${card.toString()}`);
 
-    return gameTest.execute(command)
-}).then(()=> {
-    return gameTest.getGame(gameId)
-}).then((game)=> {
-    console.log(game)
-});
+        command.play(card);
+        command.draw();
+
+        return gameTest.execute(command)
+    }).then(()=> {
+        return gameTest.getGame(gameId)
+    }).then((game)=> {
+        let command = new Command(gameId, game.gameUserId);
+        let card = game.hand[0];
+        console.log(`Discarding card: ${card.toString()}`);
+
+        command.discard(card);
+        command.draw();
+
+        return gameTest.execute(command)
+    }).then(()=> {
+        return gameTest.getGame(gameId)
+    }).then((game)=> {
+        return console.log(game)
+    });

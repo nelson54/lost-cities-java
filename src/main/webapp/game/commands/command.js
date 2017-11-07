@@ -27,7 +27,8 @@ module.exports = class Command {
     toJson() {
         return {
             color: this._color,
-            play: this._play.toString(),
+            play: (this._play)
+                ? this._play.toString() : null,
             discard: (this._discard)
                 ? this._discard.toString() : null,
             gameUserId: this.gameUserId

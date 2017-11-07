@@ -11,7 +11,4 @@
     <changeSet author="derek (generated)" id="1510011726561-3">
         <dropUniqueConstraint constraintName="CONSTRAINT_71" tableName="JHI_SOCIAL_USER_CONNECTION"/>
     </changeSet>
-    <changeSet author="derek (generated)" id="1510011726561-4">
-        <dropUniqueConstraint constraintName="CONSTRAINT_B" tableName="COMMAND_ENTITY"/>
-    </changeSet>
 </databaseChangeLog>
