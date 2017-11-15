@@ -1,7 +1,7 @@
 package com.github.nelson54.lostcities.web.rest;
 
+import com.github.nelson54.lostcities.LostCitiesApp;
 import io.github.jhipster.config.JHipsterProperties;
-import com.github.nelson54.lostcities.JhipsterApp;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @see ProfileInfoResource
  **/
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = JhipsterApp.class)
+@SpringBootTest(classes = LostCitiesApp.class)
 public class ProfileInfoResourceIntTest {
 
     @Mock

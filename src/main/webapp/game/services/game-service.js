@@ -1,11 +1,18 @@
 const axios = require('axios');
 
-//const game = require('../game');
-
 module.exports = class GameService {
 
     constructor(root) {
         this.root = root || '';
+    }
+
+    login(username, password) {
+        return axios.post(`${this.root}/api/authenticate`, {username, password})
+            .then((response)=> {
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.id_token;
+
+                return response;
+            })
     }
 
     getGame(id) {
@@ -24,5 +31,7 @@ module.exports = class GameService {
             });
     }
 };
+
+
 
 

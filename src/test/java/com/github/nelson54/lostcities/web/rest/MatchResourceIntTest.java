@@ -1,6 +1,6 @@
 package com.github.nelson54.lostcities.web.rest;
 
-import com.github.nelson54.lostcities.JhipsterApp;
+import com.github.nelson54.lostcities.LostCitiesApp;
 
 import com.github.nelson54.lostcities.domain.Match;
 import com.github.nelson54.lostcities.repository.MatchRepository;
@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @see MatchResource
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = JhipsterApp.class)
+@SpringBootTest(classes = LostCitiesApp.class)
 public class MatchResourceIntTest {
 
     private static final Long DEFAULT_INITIAL_SEED = 1L;

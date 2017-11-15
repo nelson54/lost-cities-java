@@ -1,6 +1,6 @@
 package com.github.nelson54.lostcities.web.rest.errors;
 
-import com.github.nelson54.lostcities.JhipsterApp;
+import com.github.nelson54.lostcities.LostCitiesApp;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @see ExceptionTranslator
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = JhipsterApp.class)
+@SpringBootTest(classes = LostCitiesApp.class)
 public class ExceptionTranslatorIntTest {
 
     @Autowired

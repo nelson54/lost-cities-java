@@ -1,90 +1,83 @@
 package com.github.nelson54.lostcities.service;
 
 import com.github.nelson54.lostcities.domain.CommandEntity;
+import com.github.nelson54.lostcities.domain.GameUser;
 import com.github.nelson54.lostcities.domain.Match;
-import com.github.nelson54.lostcities.domain.game.Card;
-import com.github.nelson54.lostcities.domain.game.Command;
+import com.github.nelson54.lostcities.domain.User;
 import com.github.nelson54.lostcities.domain.game.Game;
-import com.github.nelson54.lostcities.domain.game.Player;
-import com.github.nelson54.lostcities.domain.game.exceptions.GameException;
-import com.github.nelson54.lostcities.domain.game.mappers.CommandMapper;
-import com.github.nelson54.lostcities.domain.game.mappers.MatchToGameMapper;
-import com.github.nelson54.lostcities.service.exceptions.UnableToFindGameException;
+import com.github.nelson54.lostcities.service.dto.PlayerViewDto;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
-
 public class GameService {
-    private final CommandMapper commandMapper;
-    private final MatchService matchService;
-    private final MatchToGameMapper matchToGameMapper;
 
-    public GameService(CommandMapper commandMapper, MatchService matchService, MatchToGameMapper matchToGameMapper) {
-        this.commandMapper = commandMapper;
+    private final Random random;
+    private final GameMappingService gameMappingService;
+    private final MatchService matchService;
+
+    public GameService(GameMappingService gameMappingService, MatchService matchService) {
+        this.random = new Random();
+        this.gameMappingService = gameMappingService;
         this.matchService = matchService;
-        this.matchToGameMapper = matchToGameMapper;
     }
 
-    public Optional<Game> getGame(Long gameId) {
+    public Optional<PlayerViewDto> getGame(Long gameId, GameUser gameUser) {
+        Game game = gameMappingService.getGame(gameId);
+
+        PlayerViewDto dto = PlayerViewDto.create(gameUser, game);
+        return Optional.of(dto);
+    }
+
+    public Optional<PlayerViewDto> playTurn(Long gameId, GameUser gameUser, CommandEntity commandEntity) {
         Match match = matchService.findOne(gameId);
 
-        return getGame(match);
+        match.addCommands(commandEntity);
+        match = matchService.save(match);
+
+        Game game = gameMappingService.getGame(match);
+
+        commandEntity.setMatch(game.getMatch());
+        commandEntity.setUser(gameUser);
+
+        PlayerViewDto dto = PlayerViewDto.create(gameUser, game);
+
+        return Optional.of(dto);
     }
 
-    public Optional<Game> getGame(Match match) {
-        Game game = matchToGameMapper.map(match);
+    public Optional<Match> createMatch(User user) {
+        GameUser gameUser = new GameUser(user);
+        Match match = new Match();
+        match.setInitialSeed(random.nextLong());
+        match = matchService.save(match);
+        gameUser.setMatch(match);
 
-        match
-            .getCommands().stream()
-            .map((commandEntity)-> commandMapper.map(game, commandEntity))
-            .forEach((command) -> {
-                try {
-                    execute(game, command);
-                } catch (GameException e) {
-                    e.printStackTrace();
-                }
-            });
+        match.addGameUsers(gameUser);
 
-        return Optional.of(game);
+        return Optional.of(matchService.save(match));
     }
 
-    public Optional<Game> applyCommand(Long gameId, CommandEntity commandEntity) throws UnableToFindGameException {
-        Game game = getGame(gameId)
-            .orElseThrow(UnableToFindGameException::new);
+    public Optional<PlayerViewDto> joinMatch(Long gameId, User user) {
+        Match match = matchService.findOne(gameId);
+        List<GameUser> users = match.getGameUsers();
 
-        return applyCommand(game, commandEntity);
-    }
+        GameUser gameUser = new GameUser(user);
+        gameUser.setMatch(match);
 
-    public Optional<Game> applyCommand(Game game, CommandEntity commandEntity) {
+        if(users.contains(gameUser)) {
 
-        Command command = commandMapper.map(game, commandEntity);
-        try {
-            execute(game, command);
-            return Optional.of(game);
-        } catch (GameException e) {
-            e.printStackTrace();
-            return Optional.empty();
-        }
-    }
-
-    private void execute(Game game, Command command) throws GameException {
-        Player player = command.getPlayer();
-        Card drew;
-
-        if (command.getPlay() != null) {
-            player.play(command.getPlay());
-        } else if (command.getDiscard() != null) {
-            player.discard(command.getDiscard());
-        }
-
-        // Draw from discard
-        if (command.getDrawColor() != null) {
-            player.draw(command.getDrawColor());
-            //Draw from deck
         } else {
-            player.draw();
+            match.addGameUsers(gameUser);
+            match = matchService.save(match);
         }
+
+        Game game = gameMappingService.getGame(match);
+        gameUser = match.getGameUsers().get(1);
+
+        PlayerViewDto dto = PlayerViewDto.create(gameUser, game);
+        return Optional.of(dto);
     }
 }

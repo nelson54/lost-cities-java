@@ -4,11 +4,13 @@ const HandGroup = require('./card-groups/hand-group');
 const PlayGroup = require('./card-groups/play-group');
 const PlayerViewFactory = require('./ui/player-view-factory');
 const cardLayoutTool = require('./utils/card-layout-tool');
+const GameService = require('./services/game-service');
 
 class LostCities extends Phaser.State {
 
     constructor() {
         super();
+        this.gameService = new GameService('http://localhost:8080');
         game.id = document.getElementsByTagName('body')[0].dataset.gameId;
 
 
@@ -16,7 +18,7 @@ class LostCities extends Phaser.State {
 
     preload() {
         game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
-        this.load.json('gameInfo', `/api/game/${game.id}`);
+
 
         this.game.load.image('image-2', '/' + require('../content/images/cards/2.png'));
         this.game.load.image('image-3', '/' + require('../content/images/cards/3.png'));
@@ -44,10 +46,14 @@ class LostCities extends Phaser.State {
     }
 
     create() {
-        let gameInfo = this.cache.getJSON('gameInfo');
-        let playerData = gameInfo.players[0];
-
-        this.player = PlayerViewFactory(playerData);
+        this.gameService
+            .login('admin', 'admin')
+            .then(() => {
+                return this.gameService.getGame(this.game.id)
+            })
+            .then((playerView) => {
+                this.player = PlayerViewFactory(playerView);
+            });
     }
 };
 

@@ -34,6 +34,10 @@ public class Card {
         }
     }
 
+    public static Card of(Integer instance, Color color, Integer value) {
+        return new Card(instance, color, value);
+    }
+
     private Card(Integer instance, Color color, Integer value) {
         this.instance = instance;
         this.color = color;

@@ -1,6 +1,6 @@
 package com.github.nelson54.lostcities.web.rest;
 
-import com.github.nelson54.lostcities.JhipsterApp;
+import com.github.nelson54.lostcities.LostCitiesApp;
 import com.github.nelson54.lostcities.domain.Authority;
 import com.github.nelson54.lostcities.domain.User;
 import com.github.nelson54.lostcities.repository.AuthorityRepository;
@@ -29,7 +29,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,7 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @see AccountResource
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = JhipsterApp.class)
+@SpringBootTest(classes = LostCitiesApp.class)
 public class AccountResourceIntTest {
 
     @Autowired

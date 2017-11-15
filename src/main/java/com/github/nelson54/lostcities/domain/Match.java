@@ -26,7 +26,7 @@ public class Match implements Serializable {
     @Column(name = "initial_seed")
     private Long initialSeed;
 
-    @OneToMany(mappedBy = "match", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "match", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private List<GameUser> gameUsers = new LinkedList<>();

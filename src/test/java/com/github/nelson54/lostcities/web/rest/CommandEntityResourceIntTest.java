@@ -1,6 +1,6 @@
 package com.github.nelson54.lostcities.web.rest;
 
-import com.github.nelson54.lostcities.JhipsterApp;
+import com.github.nelson54.lostcities.LostCitiesApp;
 
 import com.github.nelson54.lostcities.domain.CommandEntity;
 import com.github.nelson54.lostcities.repository.CommandEntityRepository;
@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @see CommandEntityResource
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = JhipsterApp.class)
+@SpringBootTest(classes = LostCitiesApp.class)
 public class CommandEntityResourceIntTest {
 
     private static final String DEFAULT_COLOR = "AAAAAAAAAA";

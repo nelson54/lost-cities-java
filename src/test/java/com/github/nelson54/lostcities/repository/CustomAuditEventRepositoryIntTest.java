@@ -1,6 +1,6 @@
 package com.github.nelson54.lostcities.repository;
 
-import com.github.nelson54.lostcities.JhipsterApp;
+import com.github.nelson54.lostcities.LostCitiesApp;
 import com.github.nelson54.lostcities.config.Constants;
 import com.github.nelson54.lostcities.config.audit.AuditEventConverter;
 import com.github.nelson54.lostcities.domain.PersistentAuditEvent;
@@ -31,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @see CustomAuditEventRepository
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = JhipsterApp.class)
+@SpringBootTest(classes = LostCitiesApp.class)
 @Transactional
 public class CustomAuditEventRepositoryIntTest {
 

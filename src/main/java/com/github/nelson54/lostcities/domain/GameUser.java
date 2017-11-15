@@ -23,11 +23,18 @@ public class GameUser implements Serializable {
     private Long id;
 
     @OneToOne
-    @JoinColumn(unique = true)
+    @JoinColumn
     private User user;
 
     @ManyToOne
     private Match match;
+
+    public GameUser() {
+    }
+
+    public GameUser(User user) {
+        this.user = user;
+    }
 
     // jhipster-needle-entity-add-field - Jhipster will add fields here, do not remove
     public Long getId() {

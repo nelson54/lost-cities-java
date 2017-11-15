@@ -1,6 +1,6 @@
 package com.github.nelson54.lostcities.service;
 
-import com.github.nelson54.lostcities.JhipsterApp;
+import com.github.nelson54.lostcities.LostCitiesApp;
 import com.github.nelson54.lostcities.config.Constants;
 import com.github.nelson54.lostcities.domain.User;
 import com.github.nelson54.lostcities.repository.UserRepository;
@@ -29,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @see UserService
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = JhipsterApp.class)
+@SpringBootTest(classes = LostCitiesApp.class)
 @Transactional
 public class UserServiceIntTest {
 

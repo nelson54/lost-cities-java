@@ -1,6 +1,6 @@
 package com.github.nelson54.lostcities.web.rest;
 
-import com.github.nelson54.lostcities.JhipsterApp;
+import com.github.nelson54.lostcities.LostCitiesApp;
 import com.github.nelson54.lostcities.domain.User;
 import com.github.nelson54.lostcities.repository.UserRepository;
 import com.github.nelson54.lostcities.security.jwt.TokenProvider;
@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @see UserJWTController
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = JhipsterApp.class)
+@SpringBootTest(classes = LostCitiesApp.class)
 public class UserJWTControllerIntTest {
 
     @Autowired

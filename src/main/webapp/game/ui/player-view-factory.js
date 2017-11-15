@@ -6,7 +6,7 @@ const Card = require('../card');
 const game = require('../game');
 
 module.exports = function PlayerViewFactory(playerData) {
-    let player = new PlayerView(playerData.gameUser);
+    let player = new PlayerView(playerData);
     player.play = new PlayGroup();
 
     let deck = new Card('deck');

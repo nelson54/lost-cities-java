@@ -20,6 +20,9 @@ public class PlayerViewDto {
     private Long gameUserId;
 
     @JsonProperty
+    private String login;
+
+    @JsonProperty
     private Boolean isActivePlayer;
 
     @JsonProperty
@@ -33,9 +36,9 @@ public class PlayerViewDto {
 
     public static PlayerViewDto create(GameUser gameUser, Game game) {
         PlayerViewDto dto = new PlayerViewDto();
-
         Player player = game.getPlayer(gameUser.getId());
 
+        dto.login = gameUser.getUser().getLogin();
         dto.matchId = game.getMatch().getId();
         dto.userId = player.getGameUser().getUser().getId();
         dto.gameUserId = player.getGameUser().getId();
@@ -47,6 +50,38 @@ public class PlayerViewDto {
         dto.discard = game.getDiscard();
 
         return dto;
+    }
+
+    public Long getMatchId() {
+        return matchId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public Long getGameUserId() {
+        return gameUserId;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public Boolean getActivePlayer() {
+        return isActivePlayer;
+    }
+
+    public Set<Card> getHand() {
+        return hand;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public Board getDiscard() {
+        return discard;
     }
 }
 

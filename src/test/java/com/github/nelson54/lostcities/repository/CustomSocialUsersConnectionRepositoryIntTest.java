@@ -1,6 +1,6 @@
 package com.github.nelson54.lostcities.repository;
 
-import com.github.nelson54.lostcities.JhipsterApp;
+import com.github.nelson54.lostcities.LostCitiesApp;
 import com.github.nelson54.lostcities.domain.SocialUserConnection;
 
 import org.junit.Before;
@@ -30,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = JhipsterApp.class)
+@SpringBootTest(classes = LostCitiesApp.class)
 @Transactional
 public class CustomSocialUsersConnectionRepositoryIntTest {
 

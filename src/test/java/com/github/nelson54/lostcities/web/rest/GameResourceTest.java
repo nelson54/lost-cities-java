@@ -1,12 +1,12 @@
 package com.github.nelson54.lostcities.web.rest;
 
-import com.github.nelson54.lostcities.JhipsterApp;
+import com.github.nelson54.lostcities.LostCitiesApp;
 import com.github.nelson54.lostcities.domain.CommandEntity;
 import com.github.nelson54.lostcities.domain.Match;
 import com.github.nelson54.lostcities.domain.game.Game;
 import com.github.nelson54.lostcities.domain.game.Player;
 import com.github.nelson54.lostcities.domain.game.exceptions.GameException;
-import com.github.nelson54.lostcities.service.GameService;
+import com.github.nelson54.lostcities.service.GameMappingService;
 import com.github.nelson54.lostcities.service.MatchService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -18,9 +18,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.time.LocalDateTime;
 
 //@RunWith(SpringRunner.class)
-//@SpringBootTest(classes = JhipsterApp.class)
+//@SpringBootTest(classes = LostCitiesApp.class)
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = JhipsterApp.class)
+@SpringBootTest(classes = LostCitiesApp.class)
 public class GameResourceTest {
 
     private final long PLAYER_ID = 1702;
@@ -30,7 +30,7 @@ public class GameResourceTest {
     GameResource gameResource;
 
     @Autowired
-    GameService gameService;
+    GameMappingService gameMappingService;
 
     @Autowired
     MatchService matchService;
@@ -66,7 +66,7 @@ public class GameResourceTest {
         command.setAddedAt(LocalDateTime.now());
         command.setMatch(match);
 
-        gameService.applyCommand(game, command);
+        gameMappingService.applyCommand(game, command);
         match.getCommands().add(command);
         matchService.save(match);
 
@@ -76,7 +76,8 @@ public class GameResourceTest {
     }
 
     private Game getGame() {
-        return gameResource.getGame(GAME_ID).getBody();
+        //return gameResource.getGame(GAME_ID).getBody();
+        return null;
     }
 
 }

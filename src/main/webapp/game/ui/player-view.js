@@ -1,13 +1,13 @@
 const game = require('../game');
 const cardLayoutTool = require('../utils/card-layout-tool');
 const TurnManager = require('../turn-manager');
+const
 
 module.exports = class PlayerView {
 
     constructor(playerData) {
-        this.gameUserId = playerData.id;
-        this.id = playerData.user.id;
-        this.login = playerData.user.login;
+        this.gameUserId = playerData.gameUserId;
+        this.login = playerData.login;
 
         this.turnManager = new TurnManager();
         this.turnManager.nextTurn(this.gameUserId);

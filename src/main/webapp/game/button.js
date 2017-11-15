@@ -1,4 +1,4 @@
-//const game = require('./game');
+const game = require('./game');
 
 module.exports = class Card extends Phaser.Sprite {
     constructor(x, y, texture) {
