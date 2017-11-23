@@ -46,7 +46,7 @@ management:
             enabled: false # When using the MailService, configure an SMTP server and set this to true
 spring:
     application:
-        name: jhipster
+        name: lost-cities
     profiles:
         # The commented value for `active` can be replaced with valid Spring profiles to load.
         # Otherwise, it will be filled in by gradle when building the WAR file
@@ -122,8 +122,8 @@ jhipster:
         from: jhipster@localhost
     swagger:
         default-include-pattern: /api/.*
-        title: jhipster API
-        description: jhipster API documentation
+        title: Lost Cities API
+        description: Lost Cities API documentation
         version: 0.0.1
         terms-of-service-url:
         contact-name:

@@ -5,6 +5,7 @@ public class Command {
     private final Color drawColor;
     private final Card play;
     private final Card discard;
+    private Card drew;
 
     public Command(Player player, Color drawColor, Card play, Card discard) {
         this.player = player;
@@ -27,5 +28,13 @@ public class Command {
 
     public Card getDiscard() {
         return discard;
+    }
+
+    public Card getDrew() {
+        return drew;
+    }
+
+    public void setDrew(Card drew) {
+        this.drew = drew;
     }
 }

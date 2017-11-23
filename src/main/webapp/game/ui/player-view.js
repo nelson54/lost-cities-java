@@ -1,7 +1,6 @@
 const game = require('../game');
 const cardLayoutTool = require('../utils/card-layout-tool');
 const TurnManager = require('../turn-manager');
-const
 
 module.exports = class PlayerView {
 
@@ -9,7 +8,7 @@ module.exports = class PlayerView {
         this.gameUserId = playerData.gameUserId;
         this.login = playerData.login;
 
-        this.turnManager = new TurnManager();
+        this.turnManager = new TurnManager(game.id);
         this.turnManager.nextTurn(this.gameUserId);
 
         this._deck = null;
@@ -48,6 +47,7 @@ module.exports = class PlayerView {
     set deck(value) {
         this._deck = value;
         this._deck.onDraw.add(()=>{
+            this.turnManager.draw();
             console.log('Drew a card!')
         })
     }
@@ -70,6 +70,7 @@ module.exports = class PlayerView {
         hand.onDiscard.add((card)=> {
             hand.remove(card);
             game.add.existing(card);
+            this.turnManager.discard(card);
 
             game.add.tween(card)
                 .to({x: game.world.centerX, y: game.world.centerY}, 600, "Linear", true)

@@ -8,6 +8,7 @@ import com.github.nelson54.lostcities.domain.Match;
 import com.github.nelson54.lostcities.domain.User;
 import com.github.nelson54.lostcities.domain.game.Card;
 import com.github.nelson54.lostcities.domain.game.Color;
+import com.github.nelson54.lostcities.domain.game.exceptions.GameException;
 import com.github.nelson54.lostcities.repository.GameUserRepository;
 import com.github.nelson54.lostcities.repository.UserRepository;
 import com.github.nelson54.lostcities.service.dto.PlayerViewDto;
@@ -32,7 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class,
     DbUnitTestExecutionListener.class })
 public class GameServiceTest {
-    private Long gameId = 1L;
+    private Long gameId = 0L;
     private Long gameUserId1 = 102L;
     private Long gameUserId2 = 103L;
     private Long userId1 = 52L;
@@ -68,7 +69,7 @@ public class GameServiceTest {
 
     @Test
     @DatabaseSetup("/db/inserts.xml")
-    public void playTurn() {
+    public void playTurn() throws GameException {
         GameUser gameUser = gameUserRepository.findOne(gameUserId1);
         Card card = Card.of(0, Color.GREEN, 6);
         CommandEntity commandEntity = new CommandEntity();

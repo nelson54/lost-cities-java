@@ -5,6 +5,7 @@ import com.github.nelson54.lostcities.domain.CommandEntity;
 import com.github.nelson54.lostcities.domain.GameUser;
 import com.github.nelson54.lostcities.domain.Match;
 import com.github.nelson54.lostcities.domain.User;
+import com.github.nelson54.lostcities.domain.game.exceptions.GameException;
 import com.github.nelson54.lostcities.repository.CommandEntityRepository;
 import com.github.nelson54.lostcities.repository.GameUserRepository;
 import com.github.nelson54.lostcities.service.GameService;
@@ -47,7 +48,7 @@ public class GameResourceV2 {
 
     @PutMapping("/game/{gameId}/play")
     @Timed
-    public ResponseEntity<PlayerViewDto> playTurn(@PathVariable Long gameId, @RequestBody CommandDto commandDto) {
+    public ResponseEntity<PlayerViewDto> playTurn(@PathVariable Long gameId, @RequestBody CommandDto commandDto) throws GameException {
         Match match = matchService.findOne(gameId);
         GameUser gameUser = gameUserRepository.findOne(commandDto.getGameUserId());
 

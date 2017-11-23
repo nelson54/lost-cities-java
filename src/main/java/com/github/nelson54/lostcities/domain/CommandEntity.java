@@ -32,6 +32,9 @@ public class CommandEntity implements Serializable {
     @Column(name = "discard")
     private String discard;
 
+    @Column(name = "drew")
+    private String drew;
+
     @Column(name = "addedAt")
     private LocalDateTime addedAt;
 
@@ -89,6 +92,14 @@ public class CommandEntity implements Serializable {
 
     public void setDiscard(String discard) {
         this.discard = discard;
+    }
+
+    public String getDrew() {
+        return drew;
+    }
+
+    public void setDrew(String drew) {
+        this.drew = drew;
     }
 
     public GameUser getUser() {

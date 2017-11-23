@@ -19,7 +19,6 @@ class LostCities extends Phaser.State {
     preload() {
         game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
 
-
         this.game.load.image('image-2', '/' + require('../content/images/cards/2.png'));
         this.game.load.image('image-3', '/' + require('../content/images/cards/3.png'));
         this.game.load.image('image-4', '/' + require('../content/images/cards/4.png'));
@@ -39,22 +38,18 @@ class LostCities extends Phaser.State {
 
         this.game.load.image('draw-button', '/' + require('../content/images/draw-button.png'));
         this.game.load.image('play-button', '/' + require('../content/images/play-button.png'));
-        this.game.load.image('draw-button', '/' + require('../content/images/undo-button.png'));
-        this.game.load.image('play-button', '/' + require('../content/images/done-button.png'));
+        this.game.load.image('undo-button', '/' + require('../content/images/undo-button.png'));
+        this.game.load.image('done-button', '/' + require('../content/images/done-button.png'));
 
         this.game.load.image('discard-button', '/' + require('../content/images/discard-button.png'));
     }
 
     create() {
-        this.gameService
-            .login('admin', 'admin')
-            .then(() => {
-                return this.gameService.getGame(this.game.id)
-            })
+        this.gameService.getGame(this.game.id)
             .then((playerView) => {
                 this.player = PlayerViewFactory(playerView);
             });
     }
-};
+}
 
 module.exports = new LostCities();

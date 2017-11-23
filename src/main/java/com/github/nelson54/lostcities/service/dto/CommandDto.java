@@ -1,5 +1,8 @@
 package com.github.nelson54.lostcities.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CommandDto {
     private Long id;
     private String color;

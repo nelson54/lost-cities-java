@@ -5,6 +5,7 @@ import com.github.nelson54.lostcities.domain.GameUser;
 import com.github.nelson54.lostcities.domain.Match;
 import com.github.nelson54.lostcities.domain.User;
 import com.github.nelson54.lostcities.domain.game.Game;
+import com.github.nelson54.lostcities.domain.game.exceptions.GameException;
 import com.github.nelson54.lostcities.service.dto.PlayerViewDto;
 import org.springframework.stereotype.Service;
 
@@ -32,16 +33,18 @@ public class GameService {
         return Optional.of(dto);
     }
 
-    public Optional<PlayerViewDto> playTurn(Long gameId, GameUser gameUser, CommandEntity commandEntity) {
+    public Optional<PlayerViewDto> playTurn(Long gameId, GameUser gameUser, CommandEntity commandEntity) throws GameException {
         Match match = matchService.findOne(gameId);
-
-        match.addCommands(commandEntity);
-        match = matchService.save(match);
 
         Game game = gameMappingService.getGame(match);
 
         commandEntity.setMatch(game.getMatch());
         commandEntity.setUser(gameUser);
+
+        gameMappingService.applyCommand(game, commandEntity);
+
+        match.addCommands(commandEntity);
+        match = matchService.save(match);
 
         PlayerViewDto dto = PlayerViewDto.create(gameUser, game);
 

@@ -45,7 +45,7 @@ version = '0.0.1-SNAPSHOT'
 description = ''
 
 bootRepackage {
-   mainClass = 'com.github.nelson54.lostcities.JhipsterApp'
+   mainClass = 'com.github.nelson54.lostcities.LostCitiesApp'
 }
 
 war {
@@ -53,7 +53,7 @@ war {
 }
 
 springBoot {
-    mainClass = 'com.github.nelson54.lostcities.JhipsterApp'
+    mainClass = 'com.github.nelson54.lostcities.LostCitiesApp'
     executable = true
     buildInfo()
 }

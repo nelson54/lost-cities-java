@@ -58,6 +58,11 @@ public class GameMappingService {
         Command command = commandMapper.map(game, commandEntity);
 
         execute(game, command);
+
+        if(commandEntity.getDrew() == null) {
+            commandEntity.setDrew(command.getDrew().toString());
+        }
+
         return game;
     }
 
