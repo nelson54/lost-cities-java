@@ -3,6 +3,7 @@ package com.github.nelson54.lostcities.domain.game;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.nelson54.lostcities.domain.Match;
 import com.github.nelson54.lostcities.domain.game.board.Board;
+import com.github.nelson54.lostcities.domain.game.mappers.CommandMapper;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,7 +13,7 @@ public class Game {
     @JsonProperty private final Board discard;
     private final Deque<Card> deck;
     private final long initialSeed;
-    private final long currentSeed;
+    private List<Command> commands;
     private PlayerOrder currentPlayer;
     private Match match;
 
@@ -21,8 +22,7 @@ public class Game {
         this.currentPlayer = PlayerOrder.PLAYER_1;
         this.players = players;
         this.discard = board;
-
-        this.initialSeed = currentSeed = match.getInitialSeed();
+        this.initialSeed = match.getInitialSeed();
         Random seed = new Random(this.initialSeed);
         Collections.shuffle(deck, seed);
         this.deck = new LinkedList<>();
@@ -30,13 +30,25 @@ public class Game {
     }
 
     public static Game create(Match match) {
+        CommandMapper commandMapper = new CommandMapper();
+        List<Command> commands;
+
         List<Player> sortedPlayers = new LinkedList<>();
         sortedPlayers.addAll(playersFromMatch(match));
         Board board = Board.create();
         List<Card> deck = Card.buildDeck();
 
         Game game = new Game(match, sortedPlayers, board, deck);
+
+        commands = match.getCommands().stream()
+            .map( commandEntity -> commandMapper.map(game, commandEntity))
+            .collect(Collectors.toList());
+
+        game.setCommands(commands);
+
         sortedPlayers.forEach((player)-> player.setGame(game));
+
+
         return game;
     }
 
@@ -84,6 +96,13 @@ public class Game {
             .orElseThrow(()-> new RuntimeException("User not found."));
     }
 
+    public Player getPlayerByUserId(Long id) {
+        return players.stream()
+            .filter((player)-> player.getGameUser().getUser().getId().equals(id))
+            .findFirst()
+            .orElseThrow(()-> new RuntimeException("User not found."));
+    }
+
     public Match getMatch() {
         return match;
     }
@@ -99,5 +118,13 @@ public class Game {
 
     public Deque<Card> getDeck() {
         return deck;
+    }
+
+    public List<Command> getCommands() {
+        return commands;
+    }
+
+    public void setCommands(List<Command> commands) {
+        this.commands = commands;
     }
 }

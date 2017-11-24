@@ -32,8 +32,12 @@ module.exports = class PlayStack extends Phaser.Group {
         return (this.baseScore + this.points) * this.multipliers;
     }
 
+    /**
+     * @param {Card} card
+     */
     addChild(card) {
         super.addChild(card);
+        card.hideButtons();
         if(card.isMultiplier) {
             this.multipliers++;
         } else {

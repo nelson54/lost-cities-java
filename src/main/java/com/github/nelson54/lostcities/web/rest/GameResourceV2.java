@@ -39,7 +39,7 @@ public class GameResourceV2 {
     @Timed
     public ResponseEntity<PlayerViewDto> getGame(@PathVariable Long gameId) {
 
-        GameUser gameUser = getGameUser().get();
+        GameUser gameUser = getGameUser();
 
         Optional<PlayerViewDto> dto = gameService.getGame(gameId, gameUser);
         return ResponseUtil.wrapOrNotFound(dto);
@@ -49,8 +49,9 @@ public class GameResourceV2 {
     @PutMapping("/game/{gameId}/play")
     @Timed
     public ResponseEntity<PlayerViewDto> playTurn(@PathVariable Long gameId, @RequestBody CommandDto commandDto) throws GameException {
+        GameUser gameUser = getGameUser();
+
         Match match = matchService.findOne(gameId);
-        GameUser gameUser = gameUserRepository.findOne(commandDto.getGameUserId());
 
         CommandEntity commandEntity = new CommandEntity();
 
@@ -71,8 +72,6 @@ public class GameResourceV2 {
     @PostMapping("/game")
     @Timed
     public ResponseEntity<Match> createMatch() {
-        GameUser gameUser = getGameUser().get();
-
         Optional<Match> match = gameService.createMatch(userService.getUserWithAuthorities());
 
         return ResponseUtil.wrapOrNotFound(match);
@@ -82,15 +81,15 @@ public class GameResourceV2 {
     @Timed
     public ResponseEntity<PlayerViewDto> joinMatch(@PathVariable() Long gameId) {
 
-        GameUser gameUser = getGameUser().get();
+        GameUser gameUser = getGameUser();
 
         Optional<PlayerViewDto> dto = gameService.joinMatch(gameId, userService.getUserWithAuthorities());
         return ResponseUtil.wrapOrNotFound(dto);
     }
 
-    private Optional<GameUser> getGameUser() {
+    private GameUser getGameUser() {
         User user = userService.getUserWithAuthorities();
-        return Optional.of(gameUserRepository.findByUserId(user.getId()));
+        return gameUserRepository.findByUserId(user.getId());
     }
 }
 

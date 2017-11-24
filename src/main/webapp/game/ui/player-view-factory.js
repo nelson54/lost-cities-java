@@ -7,7 +7,7 @@ const game = require('../game');
 
 module.exports = function PlayerViewFactory(playerData) {
     let player = new PlayerView(playerData);
-    player.play = new PlayGroup();
+    player.play = new PlayGroup(playerData.board);
 
     let deck = new Card('deck');
     deck.showDrawButton();

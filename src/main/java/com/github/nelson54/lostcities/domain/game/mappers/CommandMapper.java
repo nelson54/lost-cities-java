@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class CommandMapper {
 
     public Command map(Game game, CommandEntity commandEntity){
-        Card play = null, discard = null;
+        Card play = null, discard = null, drew = null;
         Color color = null;
 
         Player player = game.getPlayer(commandEntity.getUser().getId());
@@ -25,6 +25,10 @@ public class CommandMapper {
             discard = Card.parse(commandEntity.getDiscard());
         }
 
-        return new Command(player, color, play, discard);
+        if(commandEntity.getDrew() != null) {
+            drew = Card.parse(commandEntity.getDrew());
+        }
+
+        return new Command(player, color, play, discard, drew);
     }
 }

@@ -1,7 +1,8 @@
 const game = require('../game');
 const PlayStack = require('./play-stack');
+const Card = require('../card');
 module.exports = class PlayGroup extends Phaser.Group {
-    constructor() {
+    constructor(board) {
         super(game);
         this.colors = ['YELLOW', 'BLUE', 'WHITE', 'GREEN', 'RED'];
         this.stacks = {
@@ -13,6 +14,15 @@ module.exports = class PlayGroup extends Phaser.Group {
         };
         Object.keys(this.stacks)
             .forEach((color) => this.addChild(this.stacks[color]));
+
+        Object.keys(board.cards).forEach((color)=> {
+            let stack = board.cards[color];
+
+            stack
+                .map((card)=> new Card(card.color, card.value, card.multiplier, card.instance))
+                .forEach((card)=>this.play(card));
+
+        })
     }
 
     updateLayout() {

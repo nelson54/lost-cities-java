@@ -19,6 +19,7 @@ class LostCities extends Phaser.State {
     preload() {
         game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
 
+
         this.game.load.image('image-2', '/' + require('../content/images/cards/2.png'));
         this.game.load.image('image-3', '/' + require('../content/images/cards/3.png'));
         this.game.load.image('image-4', '/' + require('../content/images/cards/4.png'));

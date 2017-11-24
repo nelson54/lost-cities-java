@@ -73,6 +73,7 @@ public class GameServiceTest {
         GameUser gameUser = gameUserRepository.findOne(gameUserId1);
         Card card = Card.of(0, Color.GREEN, 6);
         CommandEntity commandEntity = new CommandEntity();
+        commandEntity.setUser(gameUser);
         commandEntity.setPlay(card.toString());
 
         PlayerViewDto dto = gameService.playTurn(gameId, gameUser, commandEntity).get();
