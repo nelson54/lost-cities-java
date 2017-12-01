@@ -32,11 +32,21 @@ module.exports = class PlayerView {
         this.deck.height = cardLayoutTool.height;
     }
 
-    draw() {
+    executeCommands(commands) {
 
     }
 
-    play(card) {
+    /**
+     * @param {Command} command
+     * @returns {Promise}
+     */
+    executeCommand(command) {
+        return new Promise((resolve, reject) => {
+            if(command.)
+        })
+    }
+
+    draw() {
 
     }
 

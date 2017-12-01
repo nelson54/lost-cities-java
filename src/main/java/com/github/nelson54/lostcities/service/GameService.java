@@ -6,7 +6,6 @@ import com.github.nelson54.lostcities.domain.Match;
 import com.github.nelson54.lostcities.domain.User;
 import com.github.nelson54.lostcities.domain.game.Game;
 import com.github.nelson54.lostcities.domain.game.exceptions.GameException;
-import com.github.nelson54.lostcities.service.dto.PlayerViewDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,14 +25,13 @@ public class GameService {
         this.matchService = matchService;
     }
 
-    public Optional<PlayerViewDto> getGame(Long gameId, GameUser gameUser) {
+    public Optional<Game> getGame(Long gameId, GameUser gameUser) {
         Game game = gameMappingService.getGame(gameId);
 
-        PlayerViewDto dto = PlayerViewDto.create(gameUser, game);
-        return Optional.of(dto);
+        return Optional.of(game);
     }
 
-    public Optional<PlayerViewDto> playTurn(Long gameId, GameUser gameUser, CommandEntity commandEntity) throws GameException {
+    public Optional<Game> playTurn(Long gameId, GameUser gameUser, CommandEntity commandEntity) throws GameException {
         Match match = matchService.findOne(gameId);
 
         Game game = gameMappingService.getGame(match);
@@ -46,9 +44,7 @@ public class GameService {
         match.addCommands(commandEntity);
         match = matchService.save(match);
 
-        PlayerViewDto dto = PlayerViewDto.create(gameUser, game);
-
-        return Optional.of(dto);
+        return Optional.of(game);
     }
 
     public Optional<Match> createMatch(User user) {
@@ -63,7 +59,7 @@ public class GameService {
         return Optional.of(matchService.save(match));
     }
 
-    public Optional<PlayerViewDto> joinMatch(Long gameId, User user) {
+    public Optional<Game> joinMatch(Long gameId, User user) {
         Match match = matchService.findOne(gameId);
         List<GameUser> users = match.getGameUsers();
 
@@ -78,9 +74,7 @@ public class GameService {
         }
 
         Game game = gameMappingService.getGame(match);
-        gameUser = match.getGameUsers().get(1);
 
-        PlayerViewDto dto = PlayerViewDto.create(gameUser, game);
-        return Optional.of(dto);
+        return Optional.of(game);
     }
 }

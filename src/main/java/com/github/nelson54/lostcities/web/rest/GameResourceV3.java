@@ -13,7 +13,7 @@ import com.github.nelson54.lostcities.service.GameService;
 import com.github.nelson54.lostcities.service.MatchService;
 import com.github.nelson54.lostcities.service.UserService;
 import com.github.nelson54.lostcities.service.dto.CommandDto;
-import com.github.nelson54.lostcities.service.dto.PlayerViewDto;
+import com.github.nelson54.lostcities.service.dto.ReplayablePlayerViewDto;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,14 +22,14 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v2")
-public class GameResourceV2 {
+@RequestMapping("/api/v3")
+public class GameResourceV3 {
     private final GameUserRepository gameUserRepository;
     private final UserService userService;
     private final MatchService matchService;
     private final GameService gameService;
 
-    public GameResourceV2(GameUserRepository gameUserRepository, UserService userService, MatchService matchService, CommandEntityRepository commandEntityRepository, GameService gameService) {
+    public GameResourceV3(GameUserRepository gameUserRepository, UserService userService, MatchService matchService, CommandEntityRepository commandEntityRepository, GameService gameService) {
         this.gameUserRepository = gameUserRepository;
         this.userService = userService;
         this.matchService = matchService;
@@ -38,18 +38,18 @@ public class GameResourceV2 {
 
     @GetMapping("/game/{gameId}")
     @Timed
-    public ResponseEntity<PlayerViewDto> getGame(@PathVariable Long gameId) {
+    public ResponseEntity<ReplayablePlayerViewDto> getGame(@PathVariable Long gameId) {
 
         GameUser gameUser = getGameUser();
 
         Optional<Game> game = gameService.getGame(gameId, gameUser);
-        return ResponseUtil.wrapOrNotFound(toPlayerView(gameUser, game));
+        return ResponseUtil.wrapOrNotFound(toReplayablePlayerViewDto(gameUser, game));
     }
 
 
     @PutMapping("/game/{gameId}/play")
     @Timed
-    public ResponseEntity<PlayerViewDto> playTurn(@PathVariable Long gameId, @RequestBody CommandDto commandDto) throws GameException {
+    public ResponseEntity<ReplayablePlayerViewDto> playTurn(@PathVariable Long gameId, @RequestBody CommandDto commandDto) throws GameException {
         GameUser gameUser = getGameUser();
 
         Match match = matchService.findOne(gameId);
@@ -67,7 +67,7 @@ public class GameResourceV2 {
         matchService.save(match);
 
         Optional<Game> game = gameService.playTurn(gameId, gameUser, commandEntity);
-        return ResponseUtil.wrapOrNotFound(toPlayerView(gameUser, game));
+        return ResponseUtil.wrapOrNotFound(toReplayablePlayerViewDto(gameUser, game));
     }
 
     @PostMapping("/game")
@@ -80,13 +80,13 @@ public class GameResourceV2 {
 
     @PutMapping("/game/{gameId}")
     @Timed
-    public ResponseEntity<PlayerViewDto> joinMatch(@PathVariable() Long gameId) {
+    public ResponseEntity<ReplayablePlayerViewDto> joinMatch(@PathVariable Long gameId) {
 
         GameUser gameUser = getGameUser();
 
         Optional<Game> game = gameService.joinMatch(gameId, userService.getUserWithAuthorities());
 
-        return ResponseUtil.wrapOrNotFound(toPlayerView(gameUser, game));
+        return ResponseUtil.wrapOrNotFound(toReplayablePlayerViewDto(gameUser, game));
     }
 
     private GameUser getGameUser() {
@@ -94,8 +94,8 @@ public class GameResourceV2 {
         return gameUserRepository.findByUserId(user.getId());
     }
 
-    private Optional<PlayerViewDto> toPlayerView(GameUser gameUser, Optional<Game> game) {
-        return Optional.of(PlayerViewDto.create(gameUser, game.get()));
+    private Optional<ReplayablePlayerViewDto> toReplayablePlayerViewDto(GameUser gameUser, Optional<Game> game) {
+        return Optional.of(ReplayablePlayerViewDto.create(gameUser, game.get()));
     }
 }
 
