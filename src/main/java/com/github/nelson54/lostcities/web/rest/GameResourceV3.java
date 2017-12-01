@@ -52,6 +52,8 @@ public class GameResourceV3 {
     public ResponseEntity<ReplayablePlayerViewDto> playTurn(@PathVariable Long gameId, @RequestBody CommandDto commandDto) throws GameException {
         GameUser gameUser = getGameUser();
 
+
+
         Match match = matchService.findOne(gameId);
 
         CommandEntity commandEntity = new CommandEntity();

@@ -70,24 +70,32 @@ module.exports = class PlayerView {
         let hand = this._hand = value;
 
         hand.onPlay.add((card)=> {
-            this.turnManager.command.play(card);
-            this.turnManager.apply();
-            hand.remove(card);
-            this.play.play(card);
-            hand.updateLayout();
+            this.playCard(card)
         });
 
         hand.onDiscard.add((card)=> {
-            hand.remove(card);
-            game.add.existing(card);
-            this.turnManager.discard(card);
-
-            game.add.tween(card)
-                .to({x: game.world.centerX, y: game.world.centerY}, 600, "Linear", true)
-                .onComplete.add(()=> {
-                this.updateLayout();
-            })
+            this.discardCard(card)
         });
+    }
+
+    playCard(card) {
+        this.turnManager.command.play(card);
+        this.turnManager.apply();
+        this._hand.remove(card);
+        this.play.play(card);
+        this._hand.updateLayout();
+    }
+
+    discardCard(card) {
+        this._hand.remove(card);
+        game.add.existing(card);
+        this.turnManager.discard(card);
+
+        game.add.tween(card)
+            .to({x: game.world.centerX, y: game.world.centerY}, 600, "Linear", true)
+            .onComplete.add(()=> {
+            this.updateLayout();
+        })
     }
 
     get discard() {
