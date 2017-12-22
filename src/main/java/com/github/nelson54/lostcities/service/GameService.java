@@ -43,7 +43,7 @@ public class GameService {
 
         match.addCommands(commandEntity);
         match = matchService.save(match);
-
+        game = gameMappingService.getGameWithoutRunningCommands(match);
         return Optional.of(game);
     }
 
@@ -74,6 +74,12 @@ public class GameService {
         }
 
         Game game = gameMappingService.getGame(match);
+
+        return Optional.of(game);
+    }
+
+    public Optional<Game> getGameWithoutRunningCommands(Long gameId) {
+        Game game = gameMappingService.getGameWithoutRunningCommands(gameId);
 
         return Optional.of(game);
     }

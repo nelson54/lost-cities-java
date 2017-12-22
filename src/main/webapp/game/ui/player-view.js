@@ -1,6 +1,7 @@
 const game = require('../game');
 const cardLayoutTool = require('../utils/card-layout-tool');
 const TurnManager = require('../turn-manager');
+const Card = require('../card');
 
 module.exports = class PlayerView {
 
@@ -8,7 +9,7 @@ module.exports = class PlayerView {
         this.gameUserId = playerData.gameUserId;
         this.login = playerData.login;
 
-        this.turnManager = new TurnManager(game.id);
+        this.turnManager = new TurnManager(this, game, game.id);
         this.turnManager.nextTurn(this.gameUserId);
 
         this._deck = null;
@@ -33,7 +34,9 @@ module.exports = class PlayerView {
     }
 
     executeCommands(commands) {
-
+        if(commands) {
+            commands.forEach((command)=> this.executeCommand(command));
+        }
     }
 
     /**
@@ -41,13 +44,30 @@ module.exports = class PlayerView {
      * @returns {Promise}
      */
     executeCommand(command) {
-        return new Promise((resolve, reject) => {
-            if(command.)
-        })
+        let card = null;
+        let drew = command.drew;
+        if(command.play) {
+            if(this.hand.hasCard(command.play.toString)) {
+                card = this.hand.findCard(command.play.toString);
+                this.playCard(card);
+            }
+        } else {
+            card = this.hand.findCard(command.discard.toString);
+            this.discardCard(card);
+        }
+
+        if(command.color) {
+
+        } else {
+            let card = new Card(drew.color, drew.value, drew.multiplier, drew.instance);
+            this.draw(card);
+        }
+
+        this._hand.updateLayout();
     }
 
-    draw() {
-
+    draw(card) {
+        this.hand.addChild(card);
     }
 
     get deck() {
@@ -56,9 +76,11 @@ module.exports = class PlayerView {
 
     set deck(value) {
         this._deck = value;
-        this._deck.onDraw.add(()=>{
+        this._deck.onDraw.add(() => {
+            console.log('Drew a card!');
             this.turnManager.draw();
-            console.log('Drew a card!')
+            this.turnManager.apply()
+                .then(command => this.executeCommand(command));
         })
     }
 
@@ -70,17 +92,15 @@ module.exports = class PlayerView {
         let hand = this._hand = value;
 
         hand.onPlay.add((card)=> {
-            this.playCard(card)
+            this.turnManager.play(card);
         });
 
         hand.onDiscard.add((card)=> {
-            this.discardCard(card)
+            this.turnManager.discard(card)
         });
     }
 
     playCard(card) {
-        this.turnManager.command.play(card);
-        this.turnManager.apply();
         this._hand.remove(card);
         this.play.play(card);
         this._hand.updateLayout();
@@ -89,7 +109,6 @@ module.exports = class PlayerView {
     discardCard(card) {
         this._hand.remove(card);
         game.add.existing(card);
-        this.turnManager.discard(card);
 
         game.add.tween(card)
             .to({x: game.world.centerX, y: game.world.centerY}, 600, "Linear", true)

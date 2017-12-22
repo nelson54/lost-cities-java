@@ -42,7 +42,8 @@ public class GameResourceV3 {
 
         GameUser gameUser = getGameUser();
 
-        Optional<Game> game = gameService.getGame(gameId, gameUser);
+        Optional<Game> game = gameService.getGameWithoutRunningCommands(gameId);
+
         return ResponseUtil.wrapOrNotFound(toReplayablePlayerViewDto(gameUser, game));
     }
 
@@ -64,9 +65,6 @@ public class GameResourceV3 {
         commandEntity.setDiscard(commandDto.getDiscard());
         commandEntity.setPlay(commandDto.getPlay());
         commandEntity.setAddedAt(LocalDateTime.now());
-
-        match.addCommands(commandEntity);
-        matchService.save(match);
 
         Optional<Game> game = gameService.playTurn(gameId, gameUser, commandEntity);
         return ResponseUtil.wrapOrNotFound(toReplayablePlayerViewDto(gameUser, game));

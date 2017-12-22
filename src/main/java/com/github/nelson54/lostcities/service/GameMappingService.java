@@ -78,10 +78,24 @@ public class GameMappingService {
 
         // Draw from discard
         if (command.getDrawColor() != null) {
-            player.draw(command.getDrawColor());
+            drew = player.draw(command.getDrawColor());
             //Draw from deck
         } else {
-            player.draw();
+            drew = player.draw();
         }
+
+        if(command.getDrew() == null) {
+            command.setDrew(drew);
+        }
+    }
+
+    public Game getGameWithoutRunningCommands(Long gameId) {
+        Match match = matchService.findOne(gameId);
+
+        return matchToGameMapper.map(match);
+    }
+
+    public Game getGameWithoutRunningCommands(Match match) {
+        return matchToGameMapper.map(match);
     }
 }

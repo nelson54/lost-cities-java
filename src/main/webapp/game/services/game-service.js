@@ -2,12 +2,12 @@ const axios = require('axios');
 
 module.exports = class GameService {
 
-    constructor(root) {
+    constructor(root, isVersion3) {
         let jwtToken = window.sessionStorage['jhi-authenticationtoken'].slice(1, 192);
 
-        this.root = root || '';
+        this.root = root || '/';
 
-        this.basePath = '/api/v2/game/';
+        this.basePath = isVersion3 ? 'api/v3/game/' : 'api/v2/game/';
 
         axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
 
@@ -22,7 +22,7 @@ module.exports = class GameService {
     }
 
     execute(command) {
-        return axios.put(`${this.root}/api/v2/game/${command.gameId}/play`, command.toJson())
+        return axios.put(`${this.root}${this.basePath}${command.gameId}/play`, command.toJson())
             .then((response) => response.data)
             .catch(function (error) {
                 console.log(error);

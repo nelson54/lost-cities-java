@@ -3,12 +3,12 @@ package com.github.nelson54.lostcities.service.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.nelson54.lostcities.domain.GameUser;
 import com.github.nelson54.lostcities.domain.game.Card;
+import com.github.nelson54.lostcities.domain.game.Command;
 import com.github.nelson54.lostcities.domain.game.Game;
 import com.github.nelson54.lostcities.domain.game.Player;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class ReplayablePlayerViewDto {
     @JsonProperty
@@ -27,7 +27,7 @@ public class ReplayablePlayerViewDto {
     private Set<Card> hand;
 
     @JsonProperty
-    private List<CommandDto> commands;
+    private List<Command> commands;
 
 
     public static ReplayablePlayerViewDto create(GameUser gameUser, Game game) {
@@ -38,7 +38,7 @@ public class ReplayablePlayerViewDto {
         dto.matchId = game.getMatch().getId();
         dto.userId = player.getGameUser().getUser().getId();
         dto.gameUserId = player.getGameUser().getId();
-        dto.commands = game.getCommands().stream().map(CommandDto::of).collect(Collectors.toList());
+        dto.commands = game.getCommands();
         dto.hand = player.getHand();
 
         return dto;
@@ -64,7 +64,7 @@ public class ReplayablePlayerViewDto {
         return hand;
     }
 
-    public List<CommandDto> getCommands() {
+    public List<Command> getCommands() {
         return commands;
     }
 }

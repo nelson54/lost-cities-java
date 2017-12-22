@@ -9,10 +9,13 @@ public class CommandDto {
     private String color;
     private String play;
     private String discard;
+    private String drew;
     private Long gameUserId;
 
     public static CommandDto of(Command command) {
         CommandDto dto = new CommandDto();
+
+        dto.setId(command.getId());
 
         if(command.getDrawColor() != null) {
             dto.setColor(command.getDrawColor().toSring());
@@ -24,6 +27,10 @@ public class CommandDto {
 
         if(command.getDiscard() != null) {
             dto.setDiscard(command.getDiscard().toString());
+        }
+
+        if(command.getDrew() != null) {
+            dto.setDrew(command.getDrew().toString());
         }
 
         dto.setGameUserId(command.getPlayer().getGameUser().getId());
@@ -69,5 +76,13 @@ public class CommandDto {
 
     public void setGameUserId(Long gameUserId) {
         this.gameUserId = gameUserId;
+    }
+
+    public void setDrew(String drew) {
+        this.drew = drew;
+    }
+
+    public String getDrew() {
+        return drew;
     }
 }

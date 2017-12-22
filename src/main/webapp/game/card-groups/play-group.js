@@ -15,14 +15,16 @@ module.exports = class PlayGroup extends Phaser.Group {
         Object.keys(this.stacks)
             .forEach((color) => this.addChild(this.stacks[color]));
 
-        Object.keys(board.cards).forEach((color)=> {
-            let stack = board.cards[color];
+        if(board && board.cards) {
+            Object.keys(board.cards).forEach((color) => {
+                let stack = board.cards[color];
 
-            stack
-                .map((card)=> new Card(card.color, card.value, card.multiplier, card.instance))
-                .forEach((card)=>this.play(card));
+                stack
+                    .map((card) => new Card(card.color, card.value, card.multiplier, card.instance))
+                    .forEach((card) => this.play(card));
 
-        })
+            })
+        }
     }
 
     updateLayout() {

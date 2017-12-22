@@ -30,12 +30,12 @@ public class Player {
     }
 
     public void play(Card card) throws GameException {
-        if(!hand.contains(card)) {
+        if(hand.contains(card)) {
+            hand.remove(card);
+            board.play(card);
+        } else {
             throw new UnableToPlayCardException(card);
         }
-
-        hand.remove(card);
-        board.play(card);
     }
 
     public void discard(Card card) {
@@ -43,14 +43,16 @@ public class Player {
         game.discard(card);
     }
 
-    public void draw() {
+    public Card draw() {
         Card drew = game.draw();
         hand.add(drew);
+        return drew;
     }
 
-    public void draw(Color color) {
+    public Card draw(Color color) {
         Card drew = game.draw(color);
         hand.add(drew);
+        return drew;
     }
 
     public Set<Card> getHand() {

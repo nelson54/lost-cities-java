@@ -10,7 +10,7 @@ class LostCities extends Phaser.State {
 
     constructor() {
         super();
-        this.gameService = new GameService('http://localhost:8080');
+        game.gameService = this.gameService = new GameService('http://localhost:8080/', true);
         game.id = document.getElementsByTagName('body')[0].dataset.gameId;
 
 
@@ -49,6 +49,7 @@ class LostCities extends Phaser.State {
         this.gameService.getGame(this.game.id)
             .then((playerView) => {
                 this.player = PlayerViewFactory(playerView);
+                this.player.executeCommands(playerView.commands);
             });
     }
 }

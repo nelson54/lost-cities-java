@@ -18,6 +18,8 @@ class HandGroup extends Phaser.Group {
     constructor() {
         super(game);
 
+        this.cardsByToString = {};
+
         this.properties = clone(defaultProperties);
         this.properties.maxWidth = window.innerWidth || 1028;
 
@@ -40,12 +42,21 @@ class HandGroup extends Phaser.Group {
         this.onDiscard = new Signal();
     }
 
+    hasCard(cardString) {
+        return this.cardsByToString.hasOwnProperty(cardString)
+    }
+
+    findCard(cardString) {
+        return this.cardsByToString[cardString];
+    }
+
     /**
      *
      * @param {Card} child
      */
     addChild(child) {
         super.addChild(child);
+        this.cardsByToString[child.toString()] = child;
 
         child.onPlay.add((card)=> {
             this.onPlay.dispatch(child);

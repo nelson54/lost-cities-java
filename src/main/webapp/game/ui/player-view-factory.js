@@ -5,6 +5,10 @@ const Card = require('../card');
 
 const game = require('../game');
 
+/**
+ * @param playerData
+ * @returns {PlayerView}
+ */
 module.exports = function PlayerViewFactory(playerData) {
     let player = new PlayerView(playerData);
     player.play = new PlayGroup(playerData.board);

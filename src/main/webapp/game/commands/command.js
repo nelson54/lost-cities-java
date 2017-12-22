@@ -5,7 +5,13 @@ module.exports = class Command {
     }
 
     play(card) {
+        if(this._discard) delete this._discard;
         this._play = card;
+    }
+
+    discard(card) {
+        if(this._play) delete this._play;
+        this._discard = card;
     }
 
     draw() {
@@ -14,10 +20,6 @@ module.exports = class Command {
 
     drawFromDiscard(color) {
         this._color = color;
-    }
-
-    discard(card) {
-        this._discard = card;
     }
 
     isValid() {

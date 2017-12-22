@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Command {
     @JsonProperty
+    private final Long id;
+
+    @JsonProperty
     private final Player player;
 
     @JsonProperty
@@ -18,7 +21,8 @@ public class Command {
     @JsonProperty
     private Card drew;
 
-    public Command(Player player, Color drawColor, Card play, Card discard, Card drew) {
+    public Command(Long id, Player player, Color drawColor, Card play, Card discard, Card drew) {
+        this.id = id;
         this.player = player;
         this.drawColor = drawColor;
         this.play = play;
@@ -27,6 +31,7 @@ public class Command {
     }
 
     public Command(Player player, Color drawColor, Card play, Card discard) {
+        this.id = null;
         this.player = player;
         this.drawColor = drawColor;
         this.play = play;
@@ -55,5 +60,9 @@ public class Command {
 
     public void setDrew(Card drew) {
         this.drew = drew;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

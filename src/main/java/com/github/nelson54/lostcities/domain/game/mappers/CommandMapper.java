@@ -29,6 +29,6 @@ public class CommandMapper {
             drew = Card.parse(commandEntity.getDrew());
         }
 
-        return new Command(player, color, play, discard, drew);
+        return new Command(commandEntity.getId(), player, color, play, discard, drew);
     }
 }

@@ -2,9 +2,10 @@ const GameService = require('./services/game-service');
 const Command = require('./commands/command');
 module.exports = class TurnManager {
 
-    constructor(gameId) {
+    constructor(playerView, game, gameId) {
+        this.playerView = playerView;
         this.gameId = gameId;
-        this.gameService = new GameService();
+        this.gameService = game.gameService;
     }
 
     nextTurn(gameUserId) {
@@ -28,6 +29,10 @@ module.exports = class TurnManager {
     }
 
     apply() {
-        this.gameService.execute(this.command);
+        return this.gameService.execute(this.command)
+            .then((playerView) => {
+                this.nextTurn(this.command.gameUserId);
+                return playerView.commands.pop();
+            })
     }
 };
