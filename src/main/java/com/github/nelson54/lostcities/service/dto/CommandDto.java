@@ -1,12 +1,13 @@
 package com.github.nelson54.lostcities.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.github.nelson54.lostcities.domain.game.Color;
 import com.github.nelson54.lostcities.domain.game.Command;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CommandDto {
     private Long id;
-    private String color;
+    private Color color;
     private String play;
     private String discard;
     private String drew;
@@ -18,7 +19,7 @@ public class CommandDto {
         dto.setId(command.getId());
 
         if(command.getDrawColor() != null) {
-            dto.setColor(command.getDrawColor().toSring());
+            dto.setColor(command.getDrawColor());
         }
 
         if(command.getPlay() != null) {
@@ -46,11 +47,11 @@ public class CommandDto {
         this.id = id;
     }
 
-    public String getColor() {
+    public Color getColor() {
         return color;
     }
 
-    public void setColor(String color) {
+    public void setColor(Color color) {
         this.color = color;
     }
 

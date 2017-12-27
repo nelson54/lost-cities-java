@@ -4,20 +4,15 @@ const cardLayoutTool = require('../utils/card-layout-tool');
 
 module.exports = class DiscardStack extends Phaser.Group {
 
-    constructor(i) {
-        const style = { font: "bold 32px Arial", fill: "#fff" };
+    constructor(group, i) {
         super(game);
+        this.mostRecentCards = [];
+        group.addChild(this);
         this.i = i;
         this.properties = {
             baseX: 0,
             baseY: 0
         };
-
-        this.multipliers = 1;
-        this.points = 0;
-
-        this.scoreText = game.add.text(0, 0, this.score, style);
-        this.scoreText.anchor.set(.5, 0);
     }
 
     get baseScore() {
@@ -37,13 +32,13 @@ module.exports = class DiscardStack extends Phaser.Group {
      */
     addChild(card) {
         super.addChild(card);
-        card.hideButtons();
-        if(card.isMultiplier) {
-            this.multipliers++;
-        } else {
-            this.points += card.value;
-        }
-        this.scoreText.text = this.score;
+        this.mostRecentCards.push(card);
+    }
+
+    removeMostRecentCard() {
+        let card = this.mostRecentCards.pop();
+        this.remove(card);
+        return card;
     }
 
     updateLayout() {
@@ -53,13 +48,11 @@ module.exports = class DiscardStack extends Phaser.Group {
         this.properties.baseX = cardLayoutTool.xByIndex(this.i);
         this.properties.baseY = 0;
 
-        this.children.forEach((next) => {
-            if(prev) {
-                next.y = prev.y + (prev.height * .25);
-            } else {
-                next.y = this.properties.baseY;
-            }
+        this.nextPosition = {x: this.properties.baseX, y: this.properties.baseY};
 
+        this.children.forEach((next) => {
+            next.showDrawFromDiscardButton();
+            next.y = this.properties.baseY;
             next.x = this.properties.baseX;
 
             next.width =  this.properties.width;
@@ -67,13 +60,5 @@ module.exports = class DiscardStack extends Phaser.Group {
 
             prev = next;
         });
-
-        if(prev) {
-            this.scoreText.y = this.properties.baseY + prev.height;
-        } else {
-            this.scoreText.y = this.properties.baseY;
-        }
-
-        this.scoreText.x = this.properties.baseX + (this.properties.width/2)
     }
 };

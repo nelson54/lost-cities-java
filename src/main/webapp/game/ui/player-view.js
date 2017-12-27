@@ -57,7 +57,7 @@ module.exports = class PlayerView {
         }
 
         if(command.color) {
-
+            this.drawCardFromDiscard(command.color)
         } else {
             let card = new Card(drew.color, drew.value, drew.multiplier, drew.instance);
             this.draw(card);
@@ -101,20 +101,20 @@ module.exports = class PlayerView {
     }
 
     playCard(card) {
-        this._hand.remove(card);
+        this.hand.remove(card);
         this.play.play(card);
-        this._hand.updateLayout();
+        this.hand.updateLayout();
     }
 
     discardCard(card) {
-        this._hand.remove(card);
-        game.add.existing(card);
+        this.hand.remove(card);
+        this.discard.addCard(card);
+        this.updateLayout();
+    }
 
-        game.add.tween(card)
-            .to({x: game.world.centerX, y: game.world.centerY}, 600, "Linear", true)
-            .onComplete.add(()=> {
-            this.updateLayout();
-        })
+    drawCardFromDiscard(color) {
+        let card = this.discard.removeTopCardForColor(color);
+        this.draw(card);
     }
 
     get discard() {
@@ -123,6 +123,11 @@ module.exports = class PlayerView {
 
     set discard(value) {
         this._discard = value;
+        this._discard.onDrawFromDiscard.add((card)=> {
+            this.turnManager.drawFromDiscard(card);
+            this.turnManager.apply()
+                .then(command => this.executeCommand(command));
+        })
     }
 
     get play() {

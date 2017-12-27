@@ -14,7 +14,7 @@ public class CommandMapper {
         Player player = game.getPlayer(commandEntity.getUser().getId());
 
         if(commandEntity.getColor() != null) {
-            color = Color.parse(commandEntity.getColor());
+            color = commandEntity.getColor();
         }
 
         if(commandEntity.getPlay() != null) {

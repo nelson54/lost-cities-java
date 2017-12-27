@@ -61,13 +61,18 @@ spring:
         cache: false
     zipkin: # Use the "zipkin" Maven profile to have the Spring Cloud Zipkin dependencies
         base-url: http://localhost:9411
-        enabled: false
+        enabled: true
         locator:
             discovery:
                 enabled: true
 
 liquibase:
     contexts: dev
+
+elasticsearch:
+    properties:
+        http:
+            enabled: true
 
 # ===================================================================
 # To enable SSL, generate a certificate using:
@@ -131,11 +136,11 @@ jhipster:
             enabled: false
             endpoint: /prometheusMetrics
         logs: # Reports Dropwizard metrics in the logs
-            enabled: false
+            enabled: true
             report-frequency: 60 # in seconds
     logging:
         logstash: # Forward logs to logstash over a socket, used by LoggingConfiguration
-            enabled: false
+            enabled: true
             host: localhost
             port: 5000
             queue-size: 512

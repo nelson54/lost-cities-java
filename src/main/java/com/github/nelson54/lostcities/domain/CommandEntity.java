@@ -1,5 +1,6 @@
 package com.github.nelson54.lostcities.domain;
 
+import com.github.nelson54.lostcities.domain.game.Color;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -24,7 +25,8 @@ public class CommandEntity implements Serializable {
     private Long id;
 
     @Column(name = "color")
-    private String color;
+    @Enumerated(EnumType.STRING)
+    private Color color;
 
     @Column(name = "play")
     private String play;
@@ -55,16 +57,16 @@ public class CommandEntity implements Serializable {
         this.id = id;
     }
 
-    public String getColor() {
+    public Color getColor() {
         return color;
     }
 
-    public CommandEntity color(String color) {
+    public CommandEntity color(Color color) {
         this.color = color;
         return this;
     }
 
-    public void setColor(String color) {
+    public void setColor(Color color) {
         this.color = color;
     }
 

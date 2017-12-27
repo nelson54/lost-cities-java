@@ -38,9 +38,12 @@ module.exports = class PlayGroup extends Phaser.Group {
     }
 
     animateCard(card) {
+        let stack = this.stacks[card.color],
+        nextPosition = stack.getNextCardPosition();
+
         game.add.tween(card)
-            .to({x: game.world.centerX, y: game.world.centerY}, 600, "Linear", true)
-            .onComplete.add(()=> this.stacks[card.color].updateLayout())
+            .to(nextPosition, 600, "Linear", true)
+            .onComplete.add(()=> stack.updateLayout())
     }
 };
 

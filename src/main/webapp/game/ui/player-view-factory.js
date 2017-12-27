@@ -1,6 +1,7 @@
 const PlayerView = require('./player-view');
 const PlayGroup = require('../card-groups/play-group');
 const HandGroup = require('../card-groups/hand-group');
+const DiscardGroup = require('../card-groups/discard-group');
 const Card = require('../card');
 
 const game = require('../game');
@@ -17,7 +18,7 @@ module.exports = function PlayerViewFactory(playerData) {
     deck.showDrawButton();
     game.add.existing(deck);
     player.deck = deck;
-
+    player.discard = new DiscardGroup();
     player.hand = new HandGroup();
     buildHand(player, playerData);
 

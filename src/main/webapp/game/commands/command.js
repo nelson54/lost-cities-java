@@ -15,11 +15,12 @@ module.exports = class Command {
     }
 
     draw() {
-        this.draw = true;
+        this._draw = true;
     }
 
-    drawFromDiscard(color) {
-        this._color = color;
+    drawFromDiscard(card) {
+        if(this.draw) delete this._draw;
+        this._color = card.color;
     }
 
     isValid() {

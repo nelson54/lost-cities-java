@@ -3,7 +3,7 @@ const axios = require('axios');
 module.exports = class GameService {
 
     constructor(root, isVersion3) {
-        let jwtToken = window.sessionStorage['jhi-authenticationtoken'].slice(1, 192);
+        let jwtToken = window.sessionStorage['jhi-authenticationtoken'];
 
         this.root = root || '/';
 

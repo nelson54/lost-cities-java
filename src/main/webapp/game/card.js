@@ -35,6 +35,15 @@ module.exports = class Card extends Sprite {
         this.addChild(this.drawButton);
         this.drawButton.visible = false;
 
+        this.drawFromDiscardButton = new Button(this.centerX, this.centerY + 25, 'draw-button');
+        this.drawFromDiscardButton.events.onInputUp.add(()=> {
+            if(this.parent && this.parent.parent && this.parent.parent.onDrawFromDiscard) {
+                this.parent.parent.onDrawFromDiscard.dispatch(this);
+            }
+        });
+        this.addChild(this.drawFromDiscardButton);
+        this.drawFromDiscardButton.visible = false;
+
         this.color = color;
         this.value = value;
         this.isMultiplier = isMultiplier;
@@ -50,17 +59,27 @@ module.exports = class Card extends Sprite {
     hideButtons() {
         this.playButton.visible = false;
         this.discardButton.visible = false;
+        this.drawFromDiscardButton.visible = false;
     }
 
     showButtons() {
         this.playButton.visible = true;
         this.discardButton.visible = true;
+        this.drawFromDiscardButton.visible = false;
     }
 
     showDrawButton() {
         this.playButton.visible = false;
         this.discardButton.visible = false;
+        this.drawFromDiscardButton.visible = false;
         this.drawButton.visible = true;
+    }
+
+    showDrawFromDiscardButton() {
+        this.playButton.visible = false;
+        this.discardButton.visible = false;
+        this.drawButton.visible = false;
+        this.drawFromDiscardButton.visible = true;
     }
 
     toString() {
