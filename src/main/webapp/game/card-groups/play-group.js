@@ -28,22 +28,25 @@ module.exports = class PlayGroup extends Phaser.Group {
     }
 
     updateLayout() {
+        let promises = [];
         Object.keys(this.stacks)
-            .forEach((color) => this.stacks[color].updateLayout())
+            .forEach((color) => promises.push(this.stacks[color].updateLayout()));
+
+        return Promise.all(promises);
     }
 
     play(card) {
         this.stacks[card.color].addChild(card);
-        this.animateCard(card);
-    }
+        return new Promise((resolve, reject)=> {
+            let stack = this.stacks[card.color],
+                nextPosition = stack.getNextCardPosition();
 
-    animateCard(card) {
-        let stack = this.stacks[card.color],
-        nextPosition = stack.getNextCardPosition();
-
-        game.add.tween(card)
-            .to(nextPosition, 600, "Linear", true)
-            .onComplete.add(()=> stack.updateLayout())
+            game.add.tween(card)
+                .to(nextPosition, 300, "Linear", true)
+                .onComplete.add(()=> {
+                    resolve();
+                })
+        })
     }
 };
 

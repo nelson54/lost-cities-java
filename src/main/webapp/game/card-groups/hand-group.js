@@ -9,7 +9,7 @@ const defaultProperties = {
     baseX: 0,
     baseY: 0,
     maxWidth: null,
-    padding: 10,
+    padding: 0,
     margin: 20,
     distanceFromBottom: 30
 };
@@ -54,50 +54,86 @@ class HandGroup extends Phaser.Group {
      *
      * @param {Card} child
      */
-    addChild(child) {
+    draw(child, skipAnimation) {
         super.addChild(child);
         this.cardsByToString[child.toString()] = child;
-
+        child.inputEnabled = true;
+        child.showButtons();
         child.onPlay.add((card)=> {
-            this.onPlay.dispatch(child);
+            this.onPlay.dispatch(card);
         });
 
         child.onDiscard.add((card)=> {
-            this.onDiscard.dispatch(child);
-        })
+            this.onDiscard.dispatch(card);
+        });
+        if(skipAnimation) {
+            return Promise.resolve(child);
+        } else {
+            return new Promise((resolve) => {
+                let changes = {
+                    x: this.nextPosition.x,
+                    y: this.nextPosition.y,
+                    height: this.properties.height,
+                    width: this.properties.width
+                };
+                game.add.tween(child)
+                    .to(changes, 200, "Linear", true)
+                    .onComplete.add(() => {
+                        resolve(child);
+                    });
+            })
+        }
     }
 
     updateLayout () {
-        let prev = null;
-        let scale = this.calculateCardScale();
+        if(!this.tween || !this.tween.isRunning) {
+            let prev = null;
+            let scale = this.calculateCardScale();
 
-        this.properties.width = baseWidth * scale;
-        this.properties.height = baseHeight * scale;
+            this.properties.width = baseWidth * scale;
+            this.properties.height = baseHeight * scale;
 
-        if(this.properties.distanceFromBottom) {
-            this.properties.baseY = window.innerHeight - (this.properties.height * .33) - this.properties.distanceFromBottom;
-        }
-
-        this.children.forEach((next) => {
-            if(prev) {
-                next.x = prev.x + prev.width + this.properties.padding;
-            } else {
-                next.x = this.properties.baseX + this.properties.margin;
+            if (this.properties.distanceFromBottom) {
+                this.properties.baseY = window.innerHeight - (this.properties.height * .33) - this.properties.distanceFromBottom;
             }
 
-            next.y = this.properties.baseY;
+            this.nextPosition = {
+                x: this.properties.baseX + this.properties.margin,
+                y: this.properties.baseY
+            };
 
-            next.width =  this.properties.width;
-            next.height = this.properties.height;
-            prev = next;
-        })
+            let cardChanges = [];
+
+            this.children.forEach((next) => {
+                let changes = {};
+                changes.x = this.nextPosition.x;
+                changes.y = this.nextPosition.y;
+                changes.width = this.properties.width;
+                changes.height = this.properties.height;
+                cardChanges.push(new Promise((resolve) => {
+                    game.add.tween(next)
+                        .to(changes, 300, "Linear", true)
+                        .onComplete.add(resolve)
+                }));
+
+
+                prev = next;
+
+                this.nextPosition = {
+                    x: changes.x + prev.width + this.properties.padding,
+                    y: changes.y
+                }
+            });
+
+            return Promise.all(cardChanges);
+        }
     }
 
     calculateCardScale () {
-        let size = this.children.length;
+        let size = Math.max(8, this.children.length);
         return ((this.properties.maxWidth - ((this.properties.padding * (size - 2)) + (this.properties.margin * 2))) / size) / baseWidth;
     }
 }
 
-module.exports = PropertyWatchingChangeEventProxy.create(HandGroup, Object.keys(defaultProperties), (obj)=> obj.updateLayout(), 'properties');
+module.exports = HandGroup;
 

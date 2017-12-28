@@ -50,6 +50,7 @@ module.exports = class PlayStack extends Phaser.Group {
     }
 
     updateLayout() {
+        let cardChanges = [];
         let prev = null;
         this.nextYPosition = null;
         this.properties.width = cardLayoutTool.width;
@@ -57,27 +58,41 @@ module.exports = class PlayStack extends Phaser.Group {
         this.properties.baseX = cardLayoutTool.xByIndex(this.i);
         this.properties.baseY = cardLayoutTool.height + this.properties.marginY;
         this.children.forEach((next) => {
-            next.y = this.nextYPosition || this.properties.baseY;
-            next.x = this.properties.baseX;
+            let changes = {};
 
-            next.width = this.properties.width;
-            next.height = this.properties.height;
+            changes.y = this.nextYPosition || this.properties.baseY;
+            changes.x = this.properties.baseX;
+            changes.width = this.properties.width;
+            changes.height = this.properties.height;
+            cardChanges.push(new Promise((resolve)=> {
+                game.add.tween(next)
+                    .to(changes, 300, "Linear", true)
+                    .onComplete.add(() => {
+                        resolve();
+                    });
+            }));
 
             prev = next;
             this.nextYPosition = prev.y + (prev.height * .25);
         });
 
-        if(prev) {
+        if (prev) {
             this.scoreText.y = this.properties.baseY + prev.height;
         } else {
             this.nextYPosition = this.properties.baseY;
             this.scoreText.y = this.properties.baseY;
         }
 
-        this.scoreText.x = this.properties.baseX + (this.properties.width/2)
+        this.scoreText.x = this.properties.baseX + (this.properties.width / 2)
+        return Promise.all(cardChanges);
     }
 
     getNextCardPosition() {
-        return {x: cardLayoutTool.xByIndex(this.i), y: this.nextYPosition}
+        return {
+            x: cardLayoutTool.xByIndex(this.i),
+            y: this.nextYPosition,
+            width: cardLayoutTool.width,
+            height: cardLayoutTool.height
+        }
     }
 };

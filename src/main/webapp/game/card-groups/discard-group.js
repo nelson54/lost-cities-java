@@ -23,18 +23,21 @@ module.exports = class DiscardGroup extends Group {
     }
 
     addCard(card) {
-
-        this.animateCard(card);
-    }
-
-    animateCard(card) {
-        let stack = this.stacks[card.color];
-        game.add.tween(card)
-            .to({x: game.world.centerX, y: game.world.centerY}, 600, "Linear", true)
-            .onComplete.add(()=> {
-                stack.addChild(card);
-                stack.updateLayout();
-            })
+        return new Promise((resolve) => {
+            let stack = this.stacks[card.color];
+            stack.addChild(card);
+            let changes = {
+                x: stack.nextPosition.x,
+                y: stack.nextPosition.y,
+                height: stack.properties.height,
+                width: stack.properties.width
+            };
+            game.add.tween(card)
+                .to(changes, 600, "Linear", true)
+                .onComplete.add(() => {
+                    resolve(card);
+                });
+        })
     }
 
     removeTopCardForColor(color) {

@@ -28,6 +28,10 @@ module.exports = class TurnManager {
         this.command.drawFromDiscard(color);
     }
 
+    isReady() {
+        return this.command.isValid()
+    }
+
     apply() {
         return this.gameService.execute(this.command)
             .then((playerView) => {

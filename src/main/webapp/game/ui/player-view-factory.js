@@ -20,9 +20,11 @@ module.exports = function PlayerViewFactory(playerData) {
     player.deck = deck;
     player.discard = new DiscardGroup();
     player.hand = new HandGroup();
-    buildHand(player, playerData);
 
-    return player;
+    return buildHand(player, playerData)
+        .then(()=> {
+            return player
+        });
 };
 
 /**
@@ -31,12 +33,13 @@ module.exports = function PlayerViewFactory(playerData) {
  */
 function buildHand(player, playerData) {
     let prev = null;
-
+    let addCards = [];
     playerData.hand.forEach((next) => {
-        prev = addCard(player, next, prev);
+        addCards.push(prev = addCard(player, next, prev))
     });
 
-    player.updateLayout();
+    return Promise.all(addCards)
+        .then(()=> player.updateLayout())
 }
 
 /**
@@ -45,13 +48,14 @@ function buildHand(player, playerData) {
  * @param {Card} prevCard
  */
 function addCard(player, nextCardData, prevCard) {
+
     let nextCard = new Card(nextCardData.color, nextCardData.value, nextCardData.multiplier, nextCardData.instance);
 
     if(prevCard) {
         nextCard.x = prevCard.x + prevCard.width + 10;
     }
 
-    player.hand.addChild(nextCard);
+    player.hand.draw(nextCard);
 
     return nextCard;
 }

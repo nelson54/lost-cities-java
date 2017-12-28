@@ -48,9 +48,12 @@ class LostCities extends Phaser.State {
     create() {
         this.gameService.getGame(this.game.id)
             .then((playerView) => {
-                this.player = PlayerViewFactory(playerView);
-                this.player.executeCommands(playerView.commands);
-            });
+                return PlayerViewFactory(playerView)
+                    .then((player)=>{
+                        this.player = player;
+                        return this.player.executeCommands(playerView.commands);
+                    })
+            }).then(()=> console.log('The game has been loaded.'))
     }
 }
 

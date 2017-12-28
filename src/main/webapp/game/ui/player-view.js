@@ -26,48 +26,51 @@ module.exports = class PlayerView {
     }
 
     updateLayout() {
-        this.hand.updateLayout();
         this.play.updateLayout();
+        this.discard.updateLayout();
         this.deck.x = cardLayoutTool.xByIndex(5);
         this.deck.width = cardLayoutTool.width;
         this.deck.height = cardLayoutTool.height;
+        return this.hand.updateLayout();
     }
 
     executeCommands(commands) {
+        let commandsPromise = Promise.resolve();
         if(commands) {
-            commands.forEach((command)=> this.executeCommand(command));
+            commands.forEach((command)=> commandsPromise = this.executeCommand(commandsPromise, command));
         }
+
+        return commandsPromise;
     }
 
     /**
      * @param {Command} command
      * @returns {Promise}
      */
-    executeCommand(command) {
+    executeCommand(lastCommand, command) {
         let card = null;
         let drew = command.drew;
-        if(command.play) {
-            if(this.hand.hasCard(command.play.toString)) {
+
+        return lastCommand.then(() => {
+            if (command.play && this.hand.hasCard(command.play.toString)) {
                 card = this.hand.findCard(command.play.toString);
-                this.playCard(card);
+                return this.playCard(card);
+            } else {
+                card = this.hand.findCard(command.discard.toString);
+                return this.discardCard(card)
             }
-        } else {
-            card = this.hand.findCard(command.discard.toString);
-            this.discardCard(card);
-        }
+        }).then(()=> {
+            let card;
+            if (command.drawColor) {
+                card = this.drawCardFromDiscard(command.drawColor);
+            } else {
+                card = new Card(drew.color, drew.value, drew.multiplier, drew.instance);
+            }
 
-        if(command.color) {
-            this.drawCardFromDiscard(command.color)
-        } else {
-            let card = new Card(drew.color, drew.value, drew.multiplier, drew.instance);
-            this.draw(card);
-        }
 
-        this._hand.updateLayout();
-    }
-
-    draw(card) {
-        this.hand.addChild(card);
+            let promise = this.drawCard(card);
+            return Promise.all(promise, this.updateLayout());
+        })
     }
 
     get deck() {
@@ -79,8 +82,10 @@ module.exports = class PlayerView {
         this._deck.onDraw.add(() => {
             console.log('Drew a card!');
             this.turnManager.draw();
-            this.turnManager.apply()
-                .then(command => this.executeCommand(command));
+            if(this.turnManager.isReady()) {
+                this.turnManager.apply()
+                    .then(command => this.executeCommand(Promise.resolve(), command));
+            }
         })
     }
 
@@ -100,21 +105,24 @@ module.exports = class PlayerView {
         });
     }
 
+    drawCard(card) {
+        return this.hand.draw(card);
+    }
+
     playCard(card) {
         this.hand.remove(card);
-        this.play.play(card);
-        this.hand.updateLayout();
+        let play = this.play.play(card);
+        return play;
     }
 
     discardCard(card) {
         this.hand.remove(card);
-        this.discard.addCard(card);
-        this.updateLayout();
+        let discard = this.discard.addCard(card);
+        return discard;
     }
 
     drawCardFromDiscard(color) {
-        let card = this.discard.removeTopCardForColor(color);
-        this.draw(card);
+        return this.discard.removeTopCardForColor(color);
     }
 
     get discard() {
@@ -125,8 +133,11 @@ module.exports = class PlayerView {
         this._discard = value;
         this._discard.onDrawFromDiscard.add((card)=> {
             this.turnManager.drawFromDiscard(card);
-            this.turnManager.apply()
-                .then(command => this.executeCommand(command));
+
+            if(this.turnManager.isReady()) {
+                this.turnManager.apply()
+                    .then(command => this.executeCommand(Promise.resolve(), command));
+            }
         })
     }
 

@@ -24,7 +24,7 @@ module.exports = class Command {
     }
 
     isValid() {
-        return true;
+        return (this._discard || this._play) && (this._draw || this._color);
     }
 
     toJson() {
